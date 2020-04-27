@@ -100,8 +100,8 @@ of Jacobian matrix for Newton Raphson method.
 \end{align}
 The values of diagonal elements $(Y_{ii})$ are equal to the sum of the admittances connected to bus $i$. The off-diagonal element $(Y_{ij})$ are equal to the negative of the admittance connecting the two buses $i$ and $j$. It is worth noting that with large system, $Y$-bus is a sparse matrix.
    \begin{align}
-   	Y_{ii}&=\sum^n_{\substack{j=0 \\ j\neq i}}y_{ij}\\
-	Y_{ij}&=Y_{ji}=-y_{ij}
+   	Y_{ii}&=\sum^n_{\substack{j=0 \\ j\neq i}}y_{ij}\label{yii}\\
+	Y_{ij}&=Y_{ji}=-y_{ij}\label{yij}
    \end{align}
 The net injected power at any bus can be calculated using the bus voltage ($V_i$), neighboring bus voltage $(V_j)$, and the admittances between the bus and its neighboring buses $(y_{ij})$ is
 \begin{align*}
@@ -146,8 +146,8 @@ Q_i=-\text{Im}\Biggggl\{V^*_i\left(V_i\sum_{\substack{j=0 \\ j\neq i}}y_{ij}-\su
 \]
 or simply
 \begin{align}
-	P_i&=\sum^n_{j=1}|V_i||V_j||Y_{ij}|\cos(\theta_{ij}-\delta_i+\delta_j)\\
-	Q_i&=-\sum^n_{j=1}|V_i||V_j||Y_{ij}|\sin(\theta_{ij}-\delta_i+\delta_j)
+	P_i&=\sum^n_{j=1}|V_i||V_j||Y_{ij}|\cos(\theta_{ij}-\delta_i+\delta_j)\label{PV}\\
+	Q_i&=-\sum^n_{j=1}|V_i||V_j||Y_{ij}|\sin(\theta_{ij}-\delta_i+\delta_j)\label{PQ}
 \end{align}
 And the current ($I_i$) can be written as a function of the power as follows:
 \[
@@ -163,9 +163,206 @@ And the current ($I_i$) can be written as a function of the power as follows:
   \begin{minipage}[b]{0.5\textwidth}
     \includegraphics[width=\textwidth]{fig3.png}
     \caption[figure 3]{Admittance diagram}
+    \label{fig:eg3}
   \end{minipage}
 \end{figure}
 
 \section{Newton-Raphson technique}
+
+The Newton-Raphson (NR) technique, also known as the method of successive approximation, is based on Taylor's expansion approximation. The unknown $x$ in the function $f(x)=c$ can be solved via the Taylor's expansion approximation. Starting with an initial estimate $x^{(0)}$, the estimation error is $\Delta x^{(0)}$. Applying Taylor's expansion approximation, the function can be written as
+\begin{align}
+	f(x^{(0)}+\Delta x^{(0)})=c
+\end{align}
+\begin{align}
+	f(x^{(0)}+\Delta x^{(0)})=f(x^{(0)})+f'(x^{(0)})\Delta x^{(0)}+\frac{1}{2!}f''(x^{(0)})\Delta x^{(0)^2} +\frac{1}{3!}f^{(3)}(x^{(0)})\Delta x^{(0)^2}+\cdots = c
+\end{align}
+
+Assuming $\Delta x^{(0)})$ is small, the higher order terms $\frac{1}{2!}f''(x^{(0)})\Delta x^{(0)^2} +\frac{1}{3!}f^{(3)}(x^{(0)})\Delta x^{(0)^2}+\cdots$ are neglected and the function can be approximated by the first two terms, namely,
+\begin{align}
+	f(x^{(0)}+\Delta x^{(0)})\approx f(x^{(0)})+f'(x^{(0)})\Delta x^{(0)}=c
+\end{align}
+
+Based on $x^{(0)}$, the derivation from the correct solution can be iteratively calculated.
+\begin{align}
+	\Delta x^{(0)}=\frac{c-f(x^{(0)})}{f'(x^{(0)})}=\frac{\Delta f(x^{(0)})}{f'(x^{(0)})}
+\end{align}
+
+The improved solution can be calculated iteratively.
+\begin{align}
+	x^{(1)}=x^{(0)}+\Delta x^{(0)}
+\end{align}
+The iterative process is stopped when the mismatch between scheduled and calculated value ($\Delta f^{(k)}=c-f(x^{(k)})$) is within tolerence limit $|\Delta f^{(k)}|\le \epsilon$.
+In the context of power flow problems, unknown variables $x$ are both voltage magnitude $|V_i|$ and angles $\angle \delta_i$ at load buses, as well as voltage angle ($\angle \delta_i$) at regulated buses. The scheduled (specified) quantitties $(c)$ are both net real ($P^{sch}_i$) and reactive power $(jQ^{sch}_i)$ values at load buses and real power at generation buses. The iterative values of real power are calculated using (\ref{PV}) and (\ref{PQ}). Similarly, the iterative values of real power are calculated using 
+
+\[
+	P^{(k+1)}_i=\text{Re}\Biggggl\{V^{*(k)}_i\left(V^{(k)}_i\sum_{\substack{j=0 \\ j\neq i}}y_{ij}-\sum_{\substack{j=1 \\ j\neq i}}y_{ij}V^{(k\,\,\text{or}\,\,k+1)}_j\right)\Biggggr\}
+\]
+or
+	      
+\[	
+P^{(k+1)}_i=\sum^n_{j=1}|V_i|^{(k)}|V_j|^{(k\,\,\text{or}\,\,k+1)}|Y_{ij}|\cos(\theta_{ij}-\delta^{(k)}_i+\delta^{(k)}_j)
+\]
+The Newton-Rapson power flow formulation can be written as
+\begin{align*}
+	x^{(k)}=
+\begin{bmatrix}
+\delta^{(k)}_i\\
+|V_i|^{(k)}
+\end{bmatrix}
+,
+c=
+\begin{bmatrix}
+P^{(sch)}_i\\
+Q^{(sch)}_i
+\end{bmatrix}
+,
+f=
+\begin{bmatrix}
+P^{(k)}_i\\
+Q^{(k)}_i
+\end{bmatrix}
+\text{and}
+\begin{bmatrix}
+P^{(sch)}_i\\
+Q^{(sch)}_i
+\end{bmatrix}
+-
+\begin{bmatrix}
+P^{(k)}_i\\
+Q^{(k)}_i
+\end{bmatrix}
+=
+\begin{bmatrix}
+\Delta P^{(k)}_i\\
+\Delta Q^{(k)}_i
+\end{bmatrix}
+\end{align*}
+
+
+In a multivariable setup, the derivative $f'$ is replaced by partial derivatives with respect to different variables. The Jacobian matrix is represented as
+\begin{align}
+	f'&=
+	\begin{bmatrix}
+		\frac{\partial P_i}{\partial\delta_i} & \frac{\partial P_i}{\partial |V_i|}\\
+		\frac{\partial Q_i}{\partial\delta_i} & \frac{\partial Q_i}{\partial |V_i|}
+	\end{bmatrix}
+	= 
+	\begin{bmatrix}
+		J_{P\delta} & J_{P|V|}\\
+		J_{Q\delta} & J_{Q|V|}
+	\end{bmatrix}
+\end{align}
+Therefore, the power flow can be solved using 
+\[\begin{bmatrix}
+P^{(sch)}_i\\
+Q^{(sch)}_i
+\end{bmatrix}
+-
+\begin{bmatrix}
+P^{(k)}_i\\
+Q^{(k)}_i
+\end{bmatrix}
+=
+\begin{bmatrix}
+\Delta P^{(k)}_i\\
+\Delta Q^{(k)}_i
+\end{bmatrix}
+= \begin{bmatrix}
+		J^k_{P\delta} & J^k_{P|V|}\\
+		J^k_{Q\delta} & J^k_{Q|V|}
+	\end{bmatrix}^{-1}
+	\begin{bmatrix}
+	\Delta \delta^{(k)}_i\\
+	\Delta |V_i|^{(k)}
+	\end{bmatrix}
+\]
+
+Therefore the solution can be obtained from the Jacobian matrix in the following sense,
+\begin{align*}
+	\begin{bmatrix}
+	\Delta \delta^{(k)}_i\\
+	\Delta |V_i|^{(k)}
+	\end{bmatrix}
+	=\begin{bmatrix}
+	\Delta \delta^{(k-1)}_i\\
+	\Delta |V_i|^{(k-1)}
+	\end{bmatrix}
+	+\begin{bmatrix}
+	\Delta \delta^{(k)}_i\\
+	\Delta |V_i|^{(k)}
+	\end{bmatrix}
+\end{align*}
+The iterative process stops when the mismatch between calculated and scheduled quantities is within 
+$\begin{bmatrix}
+	\Delta \delta^{(k)}_i\\
+	\Delta |V_i|^{(k)}
+	\end{bmatrix}\leq\epsilon$
+
+\begin{eg}[NR power flow solution]
+	Solve the power flow problem shown in the following 3-bus system (\ref{fig:eg5})
+	\begin{figure}[!ht]
+  \centering
+    \includegraphics[width=0.5\textwidth]{fig5.png}
+    \caption[figure 5]{3-bus power system and flow input data}
+    \label{fig:eg5}
+    \end{figure}
+	 Perform two iterations.
+\end{eg}
+
+Solution:
+
+\textit{Step one}: Build Y-bus with equation (\ref{yii}) and (\ref{yij}). So we have
+\begin{align*}
+	Y&=
+	\begin{bmatrix}
+		15-j55 & -5+j15 -10+j40\\
+		-5+j15 & 20-j65 -15+j50\\
+		-10+j40 & -15+j50 25-j90
+	\end{bmatrix}
+	=
+	\begin{bmatrix}
+		57.01\angle -74.74^{\circ} & 15.81\angle 108.43^{\circ} & 41.23\angle 104.04^{\circ}\\
+		15.81\angle 108.43^{\circ} & 68.01\angle -72.90^{\circ} & 52.20\angle 106.70^{\circ}\\
+		41.23\angle 104.04^{\circ} & 52.20\angle 106.70^{\circ} & 93.41\angle -74.48^{\circ}
+	\end{bmatrix}
+\end{align*}
+Since the unknown variables are $\delta_2$, $\delta_3$ and $|V_2|$; the scheduled quantities are 
+$P^{sch}_2$, $P^{sch}_3$ and $Q^{sch}_2$, the following problem formulation can be written.
+
+\begin{align*}
+	\begin{bmatrix}
+		P^{(sch)}_2\\
+		P^{(sch)}_3\\
+		Q^{(sch)}_2\\
+	\end{bmatrix}
+	-
+	\begin{bmatrix}
+		P^{(k)}_2\\
+		P^{(k)}_3\\
+		Q^{(k)}_2\\
+	\end{bmatrix}	
+	=
+	\begin{bmatrix}
+		\frac{\partial P_2^k}{\partial\delta_2} & \frac{\partial P_2^k}{\partial \delta_3} & \frac{\partial P_2^k}{\partial |V_2|}\\
+		\frac{\partial P_3^k}{\partial\delta_2} & \frac{\partial P_3^k}{\partial \delta_3} & \frac{\partial P_3^k}{\partial |V_2|}\\
+		\frac{\partial Q_2^k}{\partial\delta_2} & \frac{\partial Q_2^k}{\partial \delta_3} & \frac{\partial Q_2^k}{\partial |V_2|}\\
+	\end{bmatrix}
+	\begin{bmatrix}
+		\Delta \delta^{(k)}_2\\
+		\Delta \delta^{(k)}_3\\
+		\Delta |V_2|^{(k)}_2
+	\end{bmatrix}
+\end{align*}
+
+To calculate the Jacobian matrix elements, $P_2$, $P_3$ and $P_3$ equations are obtained using $P_i$ and $Q_i$.
+
+\begin{align*}
+	P_2&=\sum^n_{j=1}|V_2||V_j||Y_{2j}|\cos(\theta_{2j}-\delta_2+\delta_j)\\
+	&=|V_2||V_1||Y_{21}|\cos(\theta_{21}-\delta_2+\delta_1)+|V_2|^2|Y_{22}|\cos(\theta_{22})+|V_2||V_3||Y_{23}|\cos(\theta_{23}-\delta_2+\delta_3)
+\end{align*}
+
+\begin{align*}
+	\frac{\partial P_2}{\partial\delta_2}&=|V_2||V_1||Y_{21}|\sin(\theta_{21}-\delta_2+\delta_1)+|V_2||V_3||Y_{23}|\sin(\theta_{23}-\delta_2+\delta_3)
+\end{align*}
 
 \end{document}
