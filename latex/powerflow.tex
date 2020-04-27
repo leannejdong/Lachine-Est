@@ -350,7 +350,7 @@ $P^{sch}_2$, $P^{sch}_3$ and $Q^{sch}_2$, the following problem formulation can 
 	\begin{bmatrix}
 		\Delta \delta^{(k)}_2\\
 		\Delta \delta^{(k)}_3\\
-		\Delta |V_2|^{(k)}_2
+		\Delta |V_2|^{(k)}
 	\end{bmatrix}
 \end{align*}
 
@@ -363,6 +363,340 @@ To calculate the Jacobian matrix elements, $P_2$, $P_3$ and $P_3$ equations are 
 
 \begin{align*}
 	\frac{\partial P_2}{\partial\delta_2}&=|V_2||V_1||Y_{21}|\sin(\theta_{21}-\delta_2+\delta_1)+|V_2||V_3||Y_{23}|\sin(\theta_{23}-\delta_2+\delta_3)
+\end{align*}
+
+\begin{align*}
+	\frac{\partial P_2}{\partial\delta_3}&=-|V_2||V_3||Y_{23}|\sin(\theta_{23}-\delta_2+\delta_3)
+\end{align*}
+
+\begin{align*}
+	\frac{\partial P_2}{\partial |V_2|}&=|V_1||Y_{21}|\cos(\theta_{21}-\delta_2+\delta_1)+2|V_2||Y_{22}|\cos(\theta_{22})
++	|V_3||Y_{23}|\sin(\theta_{23}-\delta_2+\delta_3)
+\end{align*}
+
+\begin{align*}
+	P_3&=\sum^n_{j=1}|V_3||V_j||Y_{3j}|\cos(\theta_{3j}-\delta_2+\delta_j)\\
+	&=|V_3||V_1||Y_{31}|\cos(\theta_{31}-\delta_3+\delta_1)+|V_3||V_2||Y_{23}|\cos(\theta_{32}-\delta_3+\delta_2)+|V_3|^2|Y_{33}|\cos(\theta_{33})
+\end{align*}
+
+\begin{align*}
+	\frac{\partial P_3}{\partial\delta_3}&=|V_3||V_1||Y_{31}|\sin(\theta_{31}-\delta_3+\delta_1)+|V_3||V_2||Y_{32}|\sin(\theta_{32}-\delta_3+\delta_2)
+\end{align*}
+
+\begin{align*}
+	\frac{\partial P_3}{\partial |V_2|}&=|V_3||Y_{32}|\cos(\theta_{32}-\delta_3+\delta_2)
+\end{align*}
+
+\begin{align*}
+	Q_2&=-\sum^n_{j=1}|V_2||V_j||Y_{2j}|\sin(\theta_{2j}-\delta_2+\delta_j)\\
+	&=-|V_2||V_1||Y_{21}|\cos(\theta_{21}-\delta_2+\delta_1)-|V_2|^2|Y_{22}|\sin(\theta_{22})-|V_2||V_3||Y_{23}|\sin(\theta_{23}-\delta_2+\delta_3)
+\end{align*}
+
+\begin{align*}
+	\frac{\partial Q_3}{\partial\delta_2}&=|V_2||V_1||Y_{21}|\cos(\theta_{21}-\delta_2+\delta_1)+|V_2||V_3||Y_{23}|\cos(\theta_{23}-\delta_2+\delta_3)
+\end{align*}
+
+\begin{align*}
+	\frac{\partial Q_3}{\partial\delta_3}&=-|V_2||V_3||Y_{23}|\cos(\theta_{23}-\delta_2+\delta_3)
+\end{align*}
+
+\begin{align*}
+		\frac{\partial Q_3}{\partial |V_2|}&=-|V_1||Y_{21}|\sin(\theta_{21}-\delta_2+\delta_1)-2|V_2||Y_{22}|\sin(\theta_{22})
+-	|V_3||Y_{23}|\sin(\theta_{23}-\delta_2+\delta_3)
+\end{align*}
+Substitute $|V_1|=1.02$, $|V_3|=1.03$ and $Y_{21}=15.81\angle 108.43^{\circ}$, $\delta_1=0$ to above. And assume that 
+\begin{align}
+	V^{(0)}_2=1.00\angle 0^{\circ} \quad\text{and}\quad V^{(0)}_3=1.03\angle 0^{\circ}
+\end{align}
+
+The calculated quantities: 
+\[\begin{bmatrix}
+	P^{(1)}_2 \\
+	P^{(1)}_3\\
+	Q^{(1)}_2
+\end{bmatrix} =
+\begin{bmatrix}
+	-0.5500\\
+	0.5665\\
+	-1.8000
+\end{bmatrix}\]
+
+The scheduled quantities: 
+\[\begin{bmatrix}
+	P^{(sch)}_2 \\
+	P^{(sch)}_3\\
+	Q^{(sch)}_2
+\end{bmatrix} =
+\begin{bmatrix}
+	-2\\
+	1.5\\
+	-0.5
+\end{bmatrix}\]
+
+The mismatch power matrix:
+\begin{align*}
+	\begin{bmatrix}
+	\Delta P^{(1)}_2 \\
+	\Delta P^{(1)}_3\\
+	\Delta Q^{(1)}_2
+\end{bmatrix} =
+\begin{bmatrix}
+	-2\\
+	1.5\\
+	-0.5
+\end{bmatrix}
+-
+\begin{bmatrix}
+	-0.5500\\
+	0.5665\\
+	-1.8000
+\end{bmatrix}
+=
+\begin{bmatrix}
+	-1.45\\
+	0.9335\\
+	1.3000
+\end{bmatrix}
+\end{align*}
+
+The Jacobian matrix $J$ elements for the first iteration are 
+\begin{align*}
+	J&=
+	\begin{bmatrix}
+	66.8 & -51.5 & 19.45\\
+	-51.5 & 93.52 & -15.45\\
+	-20.55 & 15.45 & 63.2	
+	\end{bmatrix}
+\end{align*}
+
+Then continue with the Newton formulation we have
+
+\begin{align*}
+	\begin{bmatrix}
+		-1.4500\\
+		0.9335\\
+		1.3000
+	\end{bmatrix}
+	=
+	\begin{bmatrix}
+		66.8 & -51.5 & 19.45\\
+		-51.5 & 93.52 & -15.45\\
+		-20.55 & 15.45 & 63.2
+	\end{bmatrix}
+	\begin{bmatrix}
+		\Delta \delta^{(1)}_2\\
+		\Delta \delta^{(1)}_3\\
+		\Delta |V_2|^{(1)}
+	\end{bmatrix}
+\end{align*}
+Hence
+
+\begin{align*}
+		\begin{bmatrix}
+		\Delta \delta^{(1)}_2\\
+		\Delta \delta^{(1)}_3\\
+		\Delta |V_2|^{(1)}
+	\end{bmatrix}
+	= 	\begin{bmatrix}
+		66.8 & -51.5 & 19.45\\
+		-51.5 & 93.52 & -15.45\\
+		-20.55 & 15.45 & 63.2
+	\end{bmatrix}^{-1}
+		\begin{bmatrix}
+		-1.4500\\
+		0.9335\\
+		1.3000
+	\end{bmatrix}
+	= 
+		\begin{bmatrix}
+		-0.0279 \text{ rad}\\
+		-0.0033 \text{ rad}\\
+		0.0123 \text{ pu}
+	\end{bmatrix}
+\end{align*}
+
+Then 
+\begin{align*}
+	\begin{bmatrix}
+		 \delta^{(1)}_2\\
+		 \delta^{(1)}_3\\
+		  |V_2|^{(1)}
+	\end{bmatrix}
+= 	\begin{bmatrix}
+		 \delta^{(0)}_2\\
+		 \delta^{(0)}_3\\
+		  |V_2|^{(0)}
+	\end{bmatrix}
++
+	\begin{bmatrix}
+		\Delta \delta^{(1)}_2\\
+		\Delta \delta^{(1)}_3\\
+		\Delta |V_2|^{(1)}
+	\end{bmatrix}
+\end{align*}
+
+Now we move to the second iteration, consider
+
+
+\begin{align}
+	V^{(1)}_2=1.0123\angle -1.5986^{\circ} \quad\text{and}\quad V^{(1)}_3=1.03\angle -0.1891^{\circ}
+\end{align}
+
+The calculated quantities: 
+\[\begin{bmatrix}
+	P^{(2)}_2 \\
+	P^{(2)}_3\\
+	Q^{(2)}_2
+\end{bmatrix} =
+\begin{bmatrix}
+	-2.0109\\
+	1.5202\\
+	-0.4621
+\end{bmatrix}\]
+
+The mismatch power matrix:
+\begin{align*}
+	\begin{bmatrix}
+	\Delta P^{(2)}_2 \\
+	\Delta P^{(2)}_3\\
+	\Delta Q^{(2)}_2
+\end{bmatrix} =
+\begin{bmatrix}
+	-2\\
+	1.5\\
+	-0.5
+\end{bmatrix}
+-
+\begin{bmatrix}
+	-2.0109\\
+	1.5202\\
+	-0.4621
+\end{bmatrix}
+=
+\begin{bmatrix}
+	-0.0109\\
+	-0.0202\\
+	-0.0379
+\end{bmatrix}
+\end{align*}
+
+The Jacobian matrix $J$ elements for the second iteration are 
+\begin{align*}
+	J&=
+	\begin{bmatrix}
+	67.07 & -51.74 & 18.26\\
+	-52.50 & 94.49 & -14.18\\
+	-22.51 & 16.91 & 65.34	
+	\end{bmatrix}
+\end{align*}
+
+
+\begin{align*}
+		\begin{bmatrix}
+		\Delta \delta^{(2)}_2\\
+		\Delta \delta^{(2)}_3\\
+		\Delta |V_2|^{(2)}
+	\end{bmatrix}
+	= 	\begin{bmatrix}
+		67.07 & -51.74 & 18.26\\
+	-52.50 & 94.49 & -14.18\\
+	-22.51 & 16.91 & 65.34	
+	\end{bmatrix}^{-1}
+		\begin{bmatrix}
+		-2.0109\\
+		1.5202\\
+		-0.4621
+	\end{bmatrix}
+\end{align*}
+
+Then 
+\begin{align*}
+	\begin{bmatrix}
+		\Delta \delta^{(2)}_2\\
+		\Delta \delta^{(2)}_3\\
+		\Delta |V_2|^{(2)}
+	\end{bmatrix}
+= 	
+\begin{bmatrix}
+	0.1272\times 10^{-3} \text{ rad}\\
+	-0.2154\times 10^{-3} \text{ rad}\\
+	-0.4810\times 10^{-3} \text{ pu}
+\end{bmatrix}
+\end{align*}
+
+
+\begin{align*}
+	\begin{bmatrix}
+		 \delta^{(2)}_2\\
+		 \delta^{(2)}_3\\
+		  |V_2|^{(2)}
+	\end{bmatrix}
+= 	\begin{bmatrix}
+		 \delta^{(1)}_2\\
+		 \delta^{(1)}_3\\
+		  |V_2|^{(1)}
+	\end{bmatrix}
++
+	\begin{bmatrix}
+		\Delta \delta^{(2)}_2\\
+		\Delta \delta^{(2)}_3\\
+		\Delta |V_2|^{(2)}
+	\end{bmatrix}
+\end{align*}
+
+
+\begin{align*}
+	\begin{bmatrix}
+		 \delta^{(2)}_2\\
+		 \delta^{(2)}_3\\
+		  |V_2|^{(2)}
+	\end{bmatrix}
+= 	\begin{bmatrix}
+		 -0.0279\quad\text{rad}\\
+		 -0.0033\quad\text{rad}\\
+		  1.0123\quad\text{pu}
+	\end{bmatrix}
++
+	\begin{bmatrix}
+		 0.1272\times 10^{-3} \text{ rad}\\
+	-0.2154\times 10^{-3} \text{ rad}\\
+	-0.4810\times 10^{-3} \text{ pu}
+	\end{bmatrix}
+	= 
+\begin{bmatrix}
+	-0.0277 \text{ rad}\\
+	-0.0035 \text{ rad}\\
+	1.0118\text{ pu}
+\end{bmatrix}
+\end{align*}
+
+It worth noting that the mismatch between the calculated and scheduled quantities diminishes very quickly
+
+
+\begin{align*}
+\begin{bmatrix}
+	\Delta P^{(1)}_2 \\
+	\Delta P^{(1)}_3\\
+	\Delta Q^{(1)}_2
+\end{bmatrix}
+=
+\begin{bmatrix}
+	-1.4500\\
+	0.9335\\
+	1.3000
+\end{bmatrix}
+\text{and }
+\begin{bmatrix}
+	\Delta P^{(2)}_2 \\
+	\Delta P^{(2)}_3\\
+	\Delta Q^{(2)}_2
+\end{bmatrix}
+=
+\begin{bmatrix}
+	-0.0109\\
+	-0.0202\\
+	-0.0379
+\end{bmatrix}
 \end{align*}
 
 \end{document}

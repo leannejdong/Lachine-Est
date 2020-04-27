@@ -1,6 +1,6 @@
-#include "newton2d.hpp"
+#include "newton3d.hpp"
 
 int main()
 {
-	newton2d();
+	newton3d();
 }
