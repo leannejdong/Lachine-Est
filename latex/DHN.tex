@@ -38,9 +38,12 @@
 \begin{frame}
 \titlepage
 \end{frame}
+\begin{frame}{Overview}
+\tableofcontents
+\end{frame}
 
 
-\begin{frame}{Road map}
+\begin{frame}<presentation:0>{Road map}
 	\begin{itemize}
 	%	\item {\color{purple}Graph theory} and the topology to DHN
 		\item {\color{purple}Hydraulic} Model: Mathematical Physical Modelling, numerical solution and optimization
@@ -49,6 +52,9 @@
 	\end{itemize}
 \end{frame}
 %% normal frame
+\section{Fundamentals}
+
+\subsection{General concepts}
 \begin{frame}{District Heating and Cooling Networks (DHN)}
 \begin{itemize}
 	\item The most common method for heating building in cities
@@ -56,26 +62,13 @@
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Hydraulic Part}
+\subsection{Graph theory}
 
-\begin{itemize}
-	\item 	The basic assumption for the calculation is incompressible media.
-	\item 	Computation of flow distributions in DHN are mainly based on the Kirchhoff law for {\color{red}current} and {\color{blue}voltage} in circuits: The two equations describe {\color{red}flow rate} and {\color{blue}pressure losses} in the network
-	\item 	Consider the PDE describing an one dimensional flow through a horizontal pipe which can be systematically derived from the Navier-Stokes equations.
-\begin{align}
-	\frac{l}{A}\frac{d\dot{m}}{dt}+\Delta p+R|\dot{m}|\dot{m}=0
-\end{align}
-Note: $\Delta p$ denoting the difference in pressure head between the two pipes ends and $\dot{m}$ is the mass flow rate. The variable $R$ stands for the hydraulic resistance of the pipe element, which is postulated to be a function of the physical properties such as length, roughness and diameter.
-\end{itemize}
-\end{frame}
+\subsection{Solution of linear systems}
 
-\begin{frame}{Hydraulic Part: Network Topology}
-The description of the heating network is based on graph theory. First we need to form the topological matrice which show the structure of the mesh in matrix form. (To be added)
+\subsection{Solution of nonlinear systems}
 
-
-\end{frame}
-
-\begin{frame}{Hydraulic part: Solution of nonlinear system }
+\begin{frame}{Nonlinear system and root finding}
 
 \begin{itemize}
 	%\item  $f$ is nonlinear when it fails the superposition principle: $f(x_1+x_2+\cdots)\neq f(x_1)+f(x_2)+\cdots$.
@@ -170,6 +163,61 @@ int main()
 //The solution is found as 1.94 and 0.39.
 \end{lstlisting}
 \end{frame}
+
+\section{Hydraulic Model}
+
+\subsection{Numerical Solution}
+\begin{frame}{Assumption}
+
+\begin{itemize}
+	\item 	The basic assumption for the calculation is incompressible media.
+	\item 	Computation of flow distributions in DHN are mainly based on the Kirchhoff law for {\color{red}current} and {\color{blue}voltage} in circuits: The two equations describe {\color{red}flow rate} and {\color{blue}pressure losses} in the network
+	\item 	Consider the PDE describing an one dimensional flow through a horizontal pipe which can be systematically derived from the Navier-Stokes equations.
+\begin{align}
+	\frac{l}{A}\frac{d\dot{m}}{dt}+\Delta p+R|\dot{m}|\dot{m}=0
+\end{align}
+Note: $\Delta p$ denoting the difference in pressure head between the two pipes ends and $\dot{m}$ is the mass flow rate. The variable $R$ stands for the hydraulic resistance of the pipe element, which is postulated to be a function of the physical properties such as length, roughness and diameter.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Network Topology}
+The description of the heating network is based on graph theory. First we need to form the topological matrice which show the structure of the mesh in matrix form. (To be added)
+
+
+\end{frame}
+
+\begin{frame}{Solution of network equation system}
+
+\end{frame}
 }
+
+\section{Thermal model}
+
+\subsection{Thermal Calculation}
+
+\begin{frame}{Basic principle}
+	
+\end{frame}
+
+\begin{frame}{Numerical solution via finite elements}
+	
+\end{frame}
+
+\begin{frame}{Model Validation}
+	
+\end{frame}
+
+\section{Hydraulic-Thermal Model}
+
+\subsection{Calculation}
+
+\begin{frame}{Network structure}
+	to be added
+\end{frame}
+
+\begin{frame}{Calculations}
+		to be added
+\end{frame}
+
 
 \end{document}
