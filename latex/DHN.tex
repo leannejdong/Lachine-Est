@@ -1,0 +1,175 @@
+\documentclass[xcolor=dvipsnames]{beamer}
+
+%\documentclass[pdf]{beamer}
+\usetheme{Warsaw}
+%\usepackage{color}
+\usepackage[fleqn,tbtags]{mathtools}
+%\usepackage[dvipsnames]{xcolor}
+\definecolor{UBCblue}{rgb}{0.04706, 0.13725, 0.26667} % UBC Blue (primary)
+
+\definecolor{UBCblue}{rgb}{0.04706, 0.13725, 0.26667} % UBC Blue (primary)
+\definecolor{UBCgrey}{rgb}{0.3686, 0.5255, 0.6235} % UBC Grey (secondary)
+
+\setbeamercolor{palette primary}{bg=UBCblue,fg=white}
+\setbeamercolor{palette secondary}{bg=UBCblue,fg=white}
+\setbeamercolor{palette tertiary}{bg=UBCblue,fg=white}
+\setbeamercolor{palette quaternary}{bg=UBCblue,fg=white}
+\setbeamercolor{structure}{fg=UBCblue} % itemize, enumerate, etc
+\setbeamercolor{section in toc}{fg=UBCblue} % TOC sections
+
+% Override palette coloring with secondary
+\setbeamercolor{subsection in head/foot}{bg=UBCgrey,fg=white}
+
+\usepackage{listings}
+\lstset{language=C++,
+                basicstyle=\ttfamily,
+                keywordstyle=\color{blue}\ttfamily,
+                stringstyle=\color{red}\ttfamily,
+                commentstyle=\color{green}\ttfamily,
+                morecomment=[l][\color{magenta}]{\#}
+}
+
+\mode<presentation>{}
+\title{Numerical Modelling of District Heating and Cooling network}
+\author{Leanne Dong}
+
+\begin{document}
+%% title frame
+\begin{frame}
+\titlepage
+\end{frame}
+
+
+\begin{frame}{Road map}
+	\begin{itemize}
+	%	\item {\color{purple}Graph theory} and the topology to DHN
+		\item {\color{purple}Hydraulic} Model: Mathematical Physical Modelling, numerical solution and optimization
+		\item {\color{purple}Thermal} Model: Mathematical Physical Modelling, numerical solution and optimization
+		\item {\color{purple}Hydraulic-Thermal} Model: Mathematical Physical Modelling, numerical solution and optimization
+	\end{itemize}
+\end{frame}
+%% normal frame
+\begin{frame}{District Heating and Cooling Networks (DHN)}
+\begin{itemize}
+	\item The most common method for heating building in cities
+	\item Usually consist of supply and return pipes that deliver heat in form of hot water or stream
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Hydraulic Part}
+
+\begin{itemize}
+	\item 	The basic assumption for the calculation is incompressible media.
+	\item 	Computation of flow distributions in DHN are mainly based on the Kirchhoff law for {\color{red}current} and {\color{blue}voltage} in circuits: The two equations describe {\color{red}flow rate} and {\color{blue}pressure losses} in the network
+	\item 	Consider the PDE describing an one dimensional flow through a horizontal pipe which can be systematically derived from the Navier-Stokes equations.
+\begin{align}
+	\frac{l}{A}\frac{d\dot{m}}{dt}+\Delta p+R|\dot{m}|\dot{m}=0
+\end{align}
+Note: $\Delta p$ denoting the difference in pressure head between the two pipes ends and $\dot{m}$ is the mass flow rate. The variable $R$ stands for the hydraulic resistance of the pipe element, which is postulated to be a function of the physical properties such as length, roughness and diameter.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Hydraulic Part: Network Topology}
+The description of the heating network is based on graph theory. First we need to form the topological matrice which show the structure of the mesh in matrix form. (To be added)
+
+
+\end{frame}
+
+\begin{frame}{Hydraulic part: Solution of nonlinear system }
+
+\begin{itemize}
+	%\item  $f$ is nonlinear when it fails the superposition principle: $f(x_1+x_2+\cdots)\neq f(x_1)+f(x_2)+\cdots$.
+	\item A system of nonlinear equation is a set of equations 
+	\begin{align*}
+		f_1(x_1,x_2,\cdot,x_n)&=0,\\
+		f_2(x_1,x_2,\cdot,x_n)&=0,\\
+		&\shortvdotswithin{=}
+		f_n(x_1,x_2,\cdot,x_n)&=0.
+	\end{align*}
+%where $(x_1,x_2,\cdots, x_n)\in\mathbb{R}^n$ and each $f_i$ is a nonlinear real function, $i=1,2,\cdots,n$
+	\item There are three type of nonlinear system in hydraulic model. The solutions are usually found via 
+	\textbf{Newton-Raphson} or Hardy Cross Method.
+
+	\item An example of nonlinear system from the DHN in Scharnhauser Park (Hassine and Eicker 2011)
+
+	\begin{align*}
+		x^2-2*x-y+0.5=0\\
+		x^2+4*y^2-4=0
+	\end{align*}
+
+	\item To find the solution (root), we would use the C++ Linear algebra library {\color{purple}Eigen}.  %Note, Eigen might not work for more complicated nonlinearity...
+
+\end{itemize}
+\end{frame}
+{
+\begin{frame}[fragile,shrink=20]
+	\lstset{language=C++}
+\begin{lstlisting}
+
+	#include <iostream>
+	#include </usr/include/eigen3/Eigen/Dense>
+	#include <cmath>
+	#include <vector>
+
+	void newton2d()
+	{
+		// F
+		auto F = [](const Eigen::Vector2d &x){ 
+	   		Eigen::Vector2d res;
+			res << pow(x(0),2) -2*x(0)-x(1)+0.5, pow(x(0),2) +4*pow(x(1),2)-x(1)-4;
+			return res;
+		};
+
+		// jacobian of F
+		auto DF= [] (const Eigen::Vector2d &x){
+			Eigen::Matrix2d J;
+			J << 2*x(0)-2	, -1, 
+			  	 2*x(0)		, 8*x(1);
+		  	return J;
+		};	
+
+		Eigen::Vector2d x, x_ast, s;
+		x << 2, 0.25; // initial value
+		x_ast << 1.9007, 0.3112; // solution
+	   	double tol=1E-10;
+
+		std::vector<double> errors;
+		errors.push_back((x-x_ast).norm());
+
+		do
+		{
+			s = DF(x).lu().solve(F(x));
+		   	x = x-s; // newton iteration
+			errors.push_back((x-x_ast).norm());
+		}
+		while (s.norm() > tol*x.norm());
+
+		// create eigen vector from std::vector
+		unsigned int n = errors.size();
+		Eigen::Map<Eigen::VectorXd> err(errors.data(), n);
+
+		std::cout << "solution" << std::endl;
+		std::cout << x << std::endl;
+		
+		std::cout << "Errors:" << std::endl;
+		std::cout << err << std::endl;
+
+		// compute the convergence rate of each iteration	
+		Eigen::VectorXd logDiff = err.bottomRows(n-1).array().log() - err.topRows(n-1).array().log();
+		Eigen::VectorXd rates = logDiff.bottomRows(n-2).cwiseQuotient(logDiff.topRows(n-2));
+		
+		std::cout << "Rates:" << std::endl;
+		std::cout << rates << std::endl;
+
+#include "newton2d.hpp"
+
+int main()
+{
+	newton2d();
+}
+//The solution is found as 1.94 and 0.39.
+\end{lstlisting}
+\end{frame}
+}
+
+\end{document}
