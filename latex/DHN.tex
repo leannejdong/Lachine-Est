@@ -95,7 +95,7 @@
 \end{itemize}
 \end{frame}
 {
-\begin{frame}[fragile,shrink=20]
+\begin{frame}[fragile,shrink=30]
 	\lstset{language=C++}
 \begin{lstlisting}
 
@@ -147,13 +147,6 @@
 		std::cout << "Errors:" << std::endl;
 		std::cout << err << std::endl;
 
-		// compute the convergence rate of each iteration	
-		Eigen::VectorXd logDiff = err.bottomRows(n-1).array().log() - err.topRows(n-1).array().log();
-		Eigen::VectorXd rates = logDiff.bottomRows(n-2).cwiseQuotient(logDiff.topRows(n-2));
-		
-		std::cout << "Rates:" << std::endl;
-		std::cout << rates << std::endl;
-
 #include "newton2d.hpp"
   
 int main()
@@ -195,12 +188,13 @@ The description of the heating network is based on graph theory. First we need t
 
 \subsection{Thermal Calculation}
 
-\begin{frame}{Basic principle}
-	
-\end{frame}
-
 \begin{frame}{Numerical solution via finite elements}
-	
+	By the first law of thermodynamics, the variation of the enthalpy of one pipe element is modelled by the
+	following hyperbolic PDE:
+
+	\begin{align}
+		\frac{\partial(mf)}{\partial t}=\dot{H}-\dot{H}(x+\Delta x)-d\dot{Q}_l
+	\end{align}
 \end{frame}
 
 \begin{frame}{Model Validation}
