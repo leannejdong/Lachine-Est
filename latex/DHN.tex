@@ -64,16 +64,23 @@
 
 \subsection{Graph theory}
 
-\begin{frame}{Common problems}
+\begin{frame}{Common graph problems}
 	\begin{itemize}
 		\item Shortest Path Problem : Breadth First Search (BFS), Dijkstra's, Bellman-Ford, Floyd-Warshall
-		\item Connectivity: BFS, DFS
+		\item {\color{red} Connectivity/Path finding: A* algorithm}, BFS, DFS
 		\item Negative Cycle : Bellman-Ford, Floyd-Warshall
 		\item Traveling Salesman Problem: 
 		\item Bridges: These are edges in a graph whose removal could increase the number of connected components in the graph. They are important because they represent the vulnerabilities and bottlenecks with in the graph.
 		\item Minimum Spanning Tree: Kruskal's and Prim's algorithm
 		\item Maximum Network Flow: Ford-Fulkerson and Edmonds Karp\& Dinic's algorithms
+
 	\end{itemize}
+\end{frame}
+
+\begin{frame}{Our graph problems}
+	\textbf{Problem 1: }: Suppose there are 1000 building in a town, can we implement an algorithm that connects all the thousand building? Implement a A* algorithm.
+
+	%Connectivity: nodes are given from the building location, footprint of the building needs to be known, we need to know the streets and green spaces, derive weighting factors between the connection possibilities depending on the cost of installing pipes under streets or on green spaces here is an extract from a commercial tool:Comsof Heat will automatically create a network topology which will connect each building to the network. Comsof Heat will divide the area into clusters, each supplied by a substation of a given power. Subsequently, the transport network will connect the source with the different substations. Streets and areas may be tagged with a reference cost. The automatic routing will avoid expensive streets and favour cheaper streets as much as possible. Furthermore, it is possible to classify the street cost based on the density of existing underground utilities. When maps with this information are available, the software can scan these files and create multiple categories with a different reference cost. The individual price per meter of the different types of pipe systems will be adjusted with the reference cost to come to an estimate with sufficient accuracy for a feasibility study.
 \end{frame}
 
 \begin{frame}{What type of graph problems do we want to study?}
@@ -177,6 +184,16 @@ int main()
 }
 //The solution is found as 1.94 and 0.39.
 \end{lstlisting}
+\end{frame}
+
+\subsection{Control theory}
+
+\begin{frame}{Background}
+	Please refer to LC Evans control theory course \url{https://math.berkeley.edu/~evans/control.course.pdf}
+\end{frame}
+
+\begin{frame}{Problem}
+	Control problem: (1) how do you adjust the flow rate in individual substations to that the return temperature has a given value (for example always 40°C)?
 \end{frame}
 
 \section{Hydraulic Model}
