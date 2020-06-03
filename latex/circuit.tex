@@ -30,6 +30,13 @@
 %                 morecomment=[l][\color{magenta}]{\#}
 % }
 
+\addtobeamertemplate{navigation symbols}{}{%
+    \usebeamerfont{footline}%
+    \usebeamercolor[fg]{footline}%
+    \hspace{1em}%
+    \insertframenumber/\inserttotalframenumber
+}
+
 \mode<presentation>{}
 \title{Graph theoretic approach for automating electric circuit}
 \author{Leanne Dong}
