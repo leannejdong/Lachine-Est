@@ -4,6 +4,7 @@
 \usetheme{Warsaw}
 %\usepackage{color}
 \usepackage[fleqn,tbtags]{mathtools}
+\usepackage{xcolor,minted}
 %\usepackage[dvipsnames]{xcolor}
 \definecolor{UBCblue}{rgb}{0.04706, 0.13725, 0.26667} % UBC Blue (primary)
 
@@ -20,17 +21,17 @@
 % Override palette coloring with secondary
 \setbeamercolor{subsection in head/foot}{bg=UBCgrey,fg=white}
 
-\usepackage{listings}
-\lstset{language=C++,
-                basicstyle=\ttfamily,
-                keywordstyle=\color{blue}\ttfamily,
-                stringstyle=\color{red}\ttfamily,
-                commentstyle=\color{green}\ttfamily,
-                morecomment=[l][\color{magenta}]{\#}
-}
+% \usepackage{listings}
+% \lstset{language=C++,
+%                 basicstyle=\ttfamily,
+%                 keywordstyle=\color{blue}\ttfamily,
+%                 stringstyle=\color{red}\ttfamily,
+%                 commentstyle=\color{green}\ttfamily,
+%                 morecomment=[l][\color{magenta}]{\#}
+% }
 
 \mode<presentation>{}
-\title{Numerical Modelling of District Heating and Cooling network}
+\title{Modelling District Heating and Cooling network}
 \author{Leanne Dong}
 
 \begin{document}
@@ -83,6 +84,19 @@
 	%Connectivity: nodes are given from the building location, footprint of the building needs to be known, we need to know the streets and green spaces, derive weighting factors between the connection possibilities depending on the cost of installing pipes under streets or on green spaces here is an extract from a commercial tool:Comsof Heat will automatically create a network topology which will connect each building to the network. Comsof Heat will divide the area into clusters, each supplied by a substation of a given power. Subsequently, the transport network will connect the source with the different substations. Streets and areas may be tagged with a reference cost. The automatic routing will avoid expensive streets and favour cheaper streets as much as possible. Furthermore, it is possible to classify the street cost based on the density of existing underground utilities. When maps with this information are available, the software can scan these files and create multiple categories with a different reference cost. The individual price per meter of the different types of pipe systems will be adjusted with the reference cost to come to an estimate with sufficient accuracy for a feasibility study.
 \end{frame}
 
+\begin{frame}
+	The \textbf{Depth First Search (DFS)} is the most fundamental search algorithm used to explore nodes and edges of a 
+	graph. It runs with a time complexity of $O(V+E)$ and is often used as a building block in other algorithms.
+
+	By itself the DFS isn't all that useful, but when augmented to perform other tasks such as 
+	\begin{itemize}
+		\item Count connected components,
+		\item Determine connectivity,
+		\item Find bridges/articulation point.
+	\end{itemize}
+	then DFS really shines.
+\end{frame}
+
 \begin{frame}{General problems one may ask first}
 Ask yourself:
 	\begin{itemize}
@@ -123,10 +137,11 @@ Ask yourself:
 
 \end{itemize}
 \end{frame}
-{
+
 \begin{frame}[fragile,shrink=30]
-	\lstset{language=C++}
-\begin{lstlisting}
+% 	\lstset{language=C++}
+% \begin{lstlisting}
+\begin{minted}{c++}
 
 	#include <iostream>
 	#include </usr/include/eigen3/Eigen/Dense>
@@ -183,7 +198,8 @@ int main()
 	newton2d();
 }
 //The solution is found as 1.94 and 0.39.
-\end{lstlisting}
+\end{minted}
+%\end{lstlisting}
 \end{frame}
 
 \subsection{Control theory}

@@ -1,0 +1,16 @@
+How to construct a spanning tree with vertex-centric algorithm?
+
+Ans: Remember, prims algorithm is for weighed graph to find out the minimum spanning tree.
+It will span a new vertex in every interaction and after n iterations all the n vertices will be covered.
+If you assign 1 as a weight to all the edges then also this algorithm will work. 
+And if you want to calculate total number of spanning trees for the given graph then you can use matrix tree theorem.
+
+The one I look for is prims algorithm for sure!
+    
+Two vertex sets are corresponding to set S and set V-S these two sets are represented by vector C in box 1.
+
+0 entries are corresponding to vertices which are not considered yet means in V-S set.
+1 entries are corresponding to vertices which are considered so far in S
+And you consider cross edges (edges connecting S and V-S)
+       
+Two cases for C(i,j); 1, 0 or 0, 1 means exactly one of the vertex is not spanned yet i/j and you add it and iterate.

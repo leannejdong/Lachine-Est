@@ -1,0 +1,128 @@
+\documentclass[11pt, oneside, reqno]{amsart}
+\usepackage{fullpage}
+\usepackage{amssymb,latexsym,amsmath,verbatim,layout,hyperref,amsthm,xcolor,graphicx,mdframed,tikz,geometry,inputenc,minted}  
+\numberwithin{equation}{section}
+\usepackage[T1]{fontenc}
+%\usepackage[light,math]{anttor}
+\usepackage {mathrsfs}
+%package for good looking widehat
+\usepackage{hyperref}
+\usepackage{cleveref}
+\usepackage{scalerel}
+
+\makeatletter
+\newcommand\makebig[2]{%
+  \@xp\newcommand\@xp*\csname#1\endcsname{\bBigg@{#2}}%
+  \@xp\newcommand\@xp*\csname#1l\endcsname{\@xp\mathopen\csname#1\endcsname}%
+  \@xp\newcommand\@xp*\csname#1r\endcsname{\@xp\mathclose\csname#1\endcsname}%
+}
+\makeatother
+
+\makebig{biggg} {3.0}
+\makebig{Biggg} {3.5}
+\makebig{bigggg}{4.0}
+\makebig{Bigggg}{4.5}            
+% AMS Theorems  
+\theoremstyle{plain}% default
+%\newtheorem{name}[counter]{text}[section]
+\newtheorem{thm}{Theorem}[section]
+\newtheorem{lem}[thm]{Lemma}
+\newtheorem{prop}[thm]{Proposition}
+\newtheorem{q}{Question}
+\newtheorem*{ans}{Answer}
+\newtheorem*{cor}{Corollary}
+
+
+\theoremstyle{definition}
+\newtheorem{defn}[thm]{Definition}
+\newtheorem{conj}[thm]{Conjecture}
+\newtheorem{exmp}[thm]{Example}
+
+
+\theoremstyle{remark}
+\newtheorem*{rmk}{Remark}
+\newtheorem*{note}{Note}
+\newtheorem{case}{Case}
+\newtheorem{ex}{Exercise}
+\newtheorem{eg}{Example}
+\usepackage{hyperref}
+\def\ci{\perp\!\!\!\perp}
+\newcommand*{\bigchi}{\mbox{\Large$\chi$}} 
+\renewcommand{\vec}[1]{\mathbf{#1}}
+
+
+\newcommand{\e}{\mathbf{e}} 
+    
+
+\newcommand{\vgrad}{\mathbf{\nabla}}     
+\newcommand{\vlap}{\mathbf{\Delta}}     
+\newcommand{\sph}{\mathbb{S}}
+%	x=  x,\quad  u,\quad \vgrad,\quad \vlap,\quad \sph
+\newcommand{\R}{\mathbb{R}}
+\renewcommand{\P}{\mathbb{P}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\F}{\mathbb{F}}
+\newcommand{\s}{\mathfrak{s}}
+\newcommand{\A}{\mathcal{A}}
+
+%\newcommand{\mbpRectIntensity}{\hat{\xi}^{\sqbullet}}
+
+%geometry
+\newcommand{\rectangle}{\tikz \fill [black] (0.1, 0.1) rectangle (0.2,0.2);}
+\newcommand{\trapezoid}{\tikz \fill [black] (0.1, 0.2) -- (0.2,0.3) -- (0.3,0.3) -- (0.3,0.2) -- (0.1,0.2);}
+
+
+\title{Analysis of Networks: Graph algorithms, numerical methods and implementations
+}
+
+
+\author{Leanne Dong}
+
+\date{\today}
+\begin{document}
+	\maketitle
+
+\section{Introduction}
+
+The network description is based on the graph theory. 
+
+The c++ class spStructure stores the network graph in a matrix data structure containing the incidence matrices $A=(a_{ij}$
+and $B=(b_{i,j}$ with 
+
+\section{Graph Data and Algorithms}
+
+In this chapter we will demonstrate how the structural information of the network can be introduced by means of graph. 
+We will first review some common graph traversal methods. Then in the next chapter we will describe graph algorithm. The construction of structures as spanning trees and efficient traversal methods to access the information play important roles in power flow and pipe flow problem.
+
+\begin{minted}{c++}
+#include <tesseract/baseapi.h>
+#include <leptonica/allheaders.h>
+
+int main()
+{
+    char *outText;
+
+    tesseract::TessBaseAPI *api = new tesseract::TessBaseAPI();
+    // Initialize tesseract-ocr with English, without specifying tessdata path
+    if (api->Init(NULL, "eng")) {
+        fprintf(stderr, "Could not initialize tesseract.\n");
+        exit(1);
+    }
+
+    // Open input image with leptonica library
+    Pix *image = pixRead("/usr/src/tesseract/testing/phototest.tif");
+    api->SetImage(image);
+    // Get OCR result
+    outText = api->GetUTF8Text();
+    printf("OCR output:\n%s", outText);
+
+    // Destroy used object and release memory
+    api->End();
+    delete [] outText;
+    pixDestroy(&image);
+
+    return 0;
+}
+\end{minted}
+\end{document}
