@@ -64,7 +64,7 @@
 \section{Graph theoretic foundation}
 
 \subsection{Basic concepts}
-\begin{frame}{Basic concepts}
+\begin{frame}{Graph vocabulary}
 \begin{itemize}
 	\item {\color{red}Graph} $G=(V, E)$ is a finite set of points ($V$: vertices or nodes) and lines joining some of these points ($E$ edges, arcs, links); Graphs can be directed and {\color{red}undirected};
 	\item Cycle/Circuit/Loop: a path such that the final node of the last link coincides with the initial node of the first link;
@@ -75,14 +75,21 @@
 	\begin{align*}
 		a_{ij} &= 
 		\begin{cases}
-			1 & \mbox{if $j$th edge is incident out of the $i$th vertex}\\
-			-1& \mbox{if $j$th edge is incident into  the $i$th vertex}\\
-			0& \mbox{if $j$th edge is not incident incident on the $i$th vertex}\\
+			1 & \mbox{if $j$th edge is incident on the $i$th node}\\
+			%-1& \mbox{if $j$th edge is incident into  the $i$th node}\\
+			0& \mbox{if $j$th edge is {\color{red}not} incident incident on the $i$th node}\\
 		\end{cases}
 	\end{align*}
 \end{itemize}
 \end{frame}
-
+\begin{frame}{Graph vocabulary}
+	\begin{itemize}
+		\item Complete graph: this is a graph where each node is joined by an arc to every other node.
+		\item Partial graph: a graph that contains all the nodes of the original graph but only some edges.
+		\item subgraph: a graph that contains only a subset of the nodes of the original and all of the edges that join them.
+		\item connected graph: a graph is connected if there is at least one chain from any nodes to every other node.
+	\end{itemize}
+\end{frame}
 
 \subsection{Applications to electric circuits}
 
@@ -298,11 +305,70 @@ So basically the inflow outflow relations,
 
 \section{Setting up the Kirchhoff equations: an graph theoretic approach }
 
-\subsection{Find fundamental set of circles}
+\subsection{Find spanning trees and fundamental set of circles (circuit base)}
 
-\subsection{Construct spanning tree}
+\begin{frame}{Methods}
+	\begin{itemize}
+		\item  \href{https://dl.acm.org/doi/pdf/10.1145/363848.363861}{\beamergotobutton{Gotlieb and Corneil (1967)}}: Implementated by a Physicist Prof. Milotti's group, see \href{https://github.com/edymil/CircuitMath}{\beamergotobutton{CircuitMath}}.
+		\item The above was further improved by \href{http://www.cs.kent.edu/~dragan/GraphAn/CycleBasis/p514-paton.pdf}{\beamergotobutton{Paton (1969)}}. The DFS search was used to construct cycle base: Computational very efficient!
+		\item Further improved by \href{https://dl.acm.org/doi/pdf/10.1145/362814.362819}{\beamergotobutton{Tiernan (1970)}}. %Efficient but complicated. Fortunately this has been implemented in the Boost C++ libraries. See in particular the graph library . \hyperlink{https://www.boost.org/doc/libs/1_67_0/libs/graph/doc/graph_theory_review.html}{Boost::graph} provide a comprehensive range of headers including \href{https://www.boost.org/doc/libs/1_46_1/boost/graph/tiernan_all_cycles.hpp}{\beamergotobutton{Tiernan's}} efficient search algorithm in finding the fundamental cycles of the graph. 
+	\end{itemize}
+	In term of storage and speed, Paton and Tiernan are better. Moreover, Tiernan's algorithm has been written into the modern C++ numerics libraries like \href{https://www.boost.org/}{\beamergotobutton{Boost}}
+\end{frame}
 
-\subsection{Construct independent loops}
+\begin{frame}{Method: \href{https://dl.acm.org/doi/pdf/10.1145/363848.363861}{Gotlieb and Corneil (1967)}}
+	\textbf{Assumptions}
+	\begin{itemize}
+		\item Undirected graph is represented by its adjacency matrix $A=\{a_{ij}\}$ is
+	\begin{align*}
+		a_{ij} &= 
+		\begin{cases}
+			1 & \mbox{if $j$th node is connected with the $i$th node}\\
+		%	-1& \mbox{if $j$th edge is incident into  the $i$th vertex}\\
+			0& \mbox{if $j$th node is {\color{red}not} connected with the $i$th node}\\
+		\end{cases}
+	\end{align*}
+
+	\item Graph is connected
+	\item Each connected component can be separated
+	\end{itemize}
+	%\href{https://dl.acm.org/doi/pdf/10.1145/363848.363861}{\beamergotobutton{Gotlieb and Corneil (1967)}}
+\end{frame}
+
+\begin{frame}{Method: \href{https://dl.acm.org/doi/pdf/10.1145/363848.363861}{Gotlieb and Corneil (1967)}}
+	\textbf{Key steps}
+	\begin{itemize}
+		\item Construct a set of disjoint trees by choosing some edges. 
+
+		\begin{enumerate}
+			\item The set of $n$ node is partitioned w.r.t. some chsen edges to form a set of disjoijnt trees with adjacency matrix $B$.
+			\item For rach row $i$ of A, set $b_{ji}=b_{ij}=1$ if $a_{ij}$ is the first superdiagonal element of the $i$th row of $A$ to equal 1; otherwise set $b_{ji}=b_{ij}=0$.
+		\end{enumerate}
+
+	\item Divide the set of nodes of the graph into connected components w r.t. the edges chosen in step 1.
+	\item Amalgamate the componets by adding appropriate edges to yield a spanning tree.
+	\item Produce a set of fundamental cycles
+	\end{itemize}
+	%\href{https://dl.acm.org/doi/pdf/10.1145/363848.363861}{\beamergotobutton{Gotlieb and Corneil (1967)}}
+\end{frame}
+\begin{frame}{Method: \href{http://www.cs.kent.edu/~dragan/GraphAn/CycleBasis/p514-paton.pdf}{Paton (1969)}}
+	This has been implemented by a computer scientist \href{https://www.codeproject.com/Articles/1158232/Enumerating-All-Cycles-in-an-Undirected-Graph}{Philipp Sch}. He demonstrated how in principle one can enumerate all cycles of a graph. However the method does not scale up well.
+\end{frame}
+
+\begin{frame}{Method: \href{https://dl.acm.org/doi/pdf/10.1145/362814.362819}{Tiernan (1970)}}
+	A theoretically very eddifcient search algorithm that uses an exhaustive search to find all elementary circuits of a directed graph.  
+	For more detail, one shall consult with 
+	\begin{itemize}
+		\item The official Boost Graph Library site : \href{https://www.boost.org/doc/libs/1_66_0/libs/graph/doc/quick_tour.html}{\beamergotobutton{boost::Graph}}
+		\item Textbook: \href{}{\beamergotobutton{The Boost Graph library}}
+		\item Uni-Resource: \href{http://cs.brown.edu/~jwicks/boost/libs/graph/doc/index.html}{\beamergotobutton{Brown}}
+		\item Tutorial: \href{https://www.technical-recipes.com/2015/getting-started-with-the-boost-graph-library/}{\beamergotobutton{technical-recipes}}
+	\end{itemize}
+\end{frame}
+
+%\subsection{Construct spanning tree}
+
+%\subsection{Construct independent loops}
 
 \subsection{Setting up the Kirchoff's law equations}
 
@@ -314,14 +380,36 @@ So basically the inflow outflow relations,
 
 \section{Solving the Kirchoff's law equations}
 
+
 \begin{frame}{Branch currents and voltages}
-	
+	\begin{itemize}
+		\item The solution of linear equation tields all the independent loop currents;
+		\item From them, we can find the branch currents by summing over all the independent loop currents that traverse a given branch.
+		\item By looping over all branches, one can construct a new matrix $I=\{i_{ik}\}$ where the element $i_{jk}$ stores the current in the branch that links the i-th node with the k-th node.
+		\item Similarly, we calculate a voltage matrix $V=\{v_{jk}\}$, where the matrix elemet $v_{jk} = r_{jk}$, $i_{jk}$ stores the voltage drop in the branch that links the $j$th node with the $k$th node.
+		\item Voltage are set by the power supplies w.r..t. a ground terminal: one can find the voltage of any node w.r.t. ground by following any path along the circuit that joins the node with the ground node and summing all the voltage drops.
+		\item Finnaly, save the results on a file and save for further analysis
+	\end{itemize}
 \end{frame}
 
-\begin{frame}{Comparison with SPICE}
-	
+\begin{frame}{ Potential improvements}
+	\begin{itemize}
+		\item A comparison of graph-based method with the nodal method used in established programs such as SPICE
+		\item Optimising circuit representation in the description file
+		\item Deal with sparse matrix case, the program efficiency could be boosted with the use of sparse matrix code
+		\item code could be cleaned up with C++, with introduction of linked lists represent loops and other graph structures
+		\item Can be extended to handgle time-dependent voltage and currents, instead of the linear system we have seen, we can manipulate the corresponding DEs and use a DE solver
+		\item Could be extended to include non-linear elements like semiconductor diades, transistors, etc, this would require the intro of a nonlinear equation solver
+	\end{itemize}
 \end{frame}
 
+\begin{frame}{ Potential improvements}
+	\begin{itemize}
+		\item Can be implemented in Object-Oriented sense, utilise the efficient C++ library like Boost.
+		\item Could work on a graphical interface both for input - by placing components in a special window - and for output - by automatically plotting output functions
+		\item Could be used in the analysis of fluid flow - using the analogy between hydraulic and circuit networks.
+	\end{itemize}
+\end{frame}
 
 \begin{frame}[fragile,shrink=30]{Future plan}
 	Develop existing approach in modern C++. Make use of algorithm library and Boost.
