@@ -360,9 +360,9 @@ So basically the inflow outflow relations,
 	For more detail, one shall consult with 
 	\begin{itemize}
 		\item The official Boost Graph Library site : \href{https://www.boost.org/doc/libs/1_66_0/libs/graph/doc/quick_tour.html}{\beamergotobutton{boost::Graph}}
-		\item Textbook: \href{}{\beamergotobutton{The Boost Graph library}}
+		\item Textbook: \href{https://www.amazon.ca/Boost-Graph-Library-Reference-Depth-ebook/dp/B00403MNUI}{\beamergotobutton{The Boost Graph library}}
 		\item Uni-Resource: \href{http://cs.brown.edu/~jwicks/boost/libs/graph/doc/index.html}{\beamergotobutton{Brown}}
-		\item Tutorial: \href{https://www.technical-recipes.com/2015/getting-started-with-the-boost-graph-library/}{\beamergotobutton{technical-recipes}}
+		\item Tutorial: \href{https://www.technical-recipes.com/2015/getting-started-with-the-boost-graph-library}{\beamergotobutton{technical-recipes}}
 	\end{itemize}
 \end{frame}
 
@@ -383,7 +383,7 @@ So basically the inflow outflow relations,
 
 \begin{frame}{Branch currents and voltages}
 	\begin{itemize}
-		\item The solution of linear equation tields all the independent loop currents;
+		\item The solution of linear equation yields all the independent loop currents;
 		\item From them, we can find the branch currents by summing over all the independent loop currents that traverse a given branch.
 		\item By looping over all branches, one can construct a new matrix $I=\{i_{ik}\}$ where the element $i_{jk}$ stores the current in the branch that links the i-th node with the k-th node.
 		\item Similarly, we calculate a voltage matrix $V=\{v_{jk}\}$, where the matrix elemet $v_{jk} = r_{jk}$, $i_{jk}$ stores the voltage drop in the branch that links the $j$th node with the $k$th node.
@@ -411,11 +411,22 @@ So basically the inflow outflow relations,
 	\end{itemize}
 \end{frame}
 
-\begin{frame}[fragile,shrink=30]{Future plan}
-	Develop existing approach in modern C++. Make use of algorithm library and Boost.
+\begin{frame}{Future plan}
+\begin{itemize}
+	\item Study source code of insel engine;
+	\item Develop {\color{red}ideas} to extend the insel engine toward undirected graph;
+	\item Program and implement the ideas. With helps of modern C++ library Boost Graph Library. For instance, with use of 
+\href{boost.org/doc/libs/1_46_0/boost/graph/tiernan_all_cycles.hpp}{\beamergotobutton{tiernan\_all\_cycles.hpp}}
+and \href{boost.org/doc/libs/1_46_1/libs/graph/example/tiernan_print_cycles.cpp}{\beamergotobutton{tiernan\_print\_cycles.cpp}} we could find independent set of cycles, each cycle will then give us an equation. The set of cycles yield a system of equations.
+\end{itemize}
 
-% 	\lstset{language=C++}
-% \begin{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile,shrink=30]{C++ Boost Graph Library }
+%Here is \href{https://www.boost.org/doc/libs/1_46_0/boost/graph/tiernan_all_cycles.hpp}{tiernan_all_cycles.hpp} and 
+%\href{https://www.boost.org/doc/libs/1_46_1/libs/graph/example/tiernan_print_cycles.cpp}{tiernan_print_cycles.cpp}
+
+
 \begin{minted}{c++}
 
 
@@ -451,6 +462,152 @@ using concepts::CycleVisitorConcept;
 %\end{lstlisting}
 \end{frame}
 
+\begin{frame}[fragile,shrink=30]{C++ Boost Graph Library }
+\begin{minted}{c++}
+//[tiernan_print_cycles
+#include <iostream>
 
+#include <boost/graph/directed_graph.hpp>
+#include <boost/graph/tiernan_all_cycles.hpp>
+
+#include "helper.hpp"
+
+using namespace std;
+using namespace boost;
+
+// The cycle_printer is a visitor that will print the path that comprises
+// the cycle. Note that the back() vertex of the path is not the same as
+// the front(). It is implicit in the listing of vertices that the back()
+// vertex is connected to the front().
+template <typename OutputStream>
+struct cycle_printer
+{
+    cycle_printer(OutputStream& stream)
+        : os(stream)
+    { }
+
+    template <typename Path, typename Graph>
+    void cycle(const Path& p, const Graph& g)
+    {
+        // Get the property map containing the vertex indices
+        // so we can print them.
+        typedef typename property_map<Graph, vertex_index_t>::const_type IndexMap;
+        IndexMap indices = get(vertex_index, g);
+
+        // Iterate over path printing each vertex that forms the cycle.
+        typename Path::const_iterator i, end = p.end();
+        for(i = p.begin(); i != end; ++i) {
+            os << get(indices, *i) << " ";
+        }
+        os << endl;
+    }
+    OutputStream& os;
+};
+
+// Declare the graph type and its vertex and edge types.
+typedef directed_graph<> Graph;
+typedef graph_traits<Graph>::vertex_descriptor Vertex;
+typedef graph_traits<Graph>::edge_descriptor Edge;
+
+int main(int argc, char *argv[])
+{
+    // Create the graph and read it from standard input.
+    Graph g;
+    read_graph(g, cin);
+
+    // Instantiate the visitor for printing cycles
+    cycle_printer<ostream> vis(cout);
+
+    // Use the Tiernan algorithm to visit all cycles, printing them
+    // as they are found.
+    tiernan_all_cycles(g, vis);
+
+    return 0;
+}
+\end{minted}
+%\end{lstlisting}
+\end{frame}
+
+% \begin{frame}[fragile,shrink=30]{Creating adjacency matrix}
+% \begin{minted}{c++}
+% #include <iostream>
+% #include <vector>
+% #include <utility>
+% void print_graph(const std::vector<std::vector<int> > &adj);
+% void addEdge(std::vector<std::vector<int> >& adj, int u, int v);
+
+% int main()
+% {
+% // Initialise array to hold adjacency matrix, vec<>s is already dynamic
+%     std::vector<std::vector<int> > adj(3, std::vector<int>(3));
+%     addEdge(adj,0,1);     // edge from node 0 to node 1
+%     addEdge(adj,0,2);
+%     addEdge(adj,1,2);
+%     print_graph(adj);
+%   //  return 0;
+% }
+
+% void print_graph(const std::vector<std::vector<int> >& adj)
+% {
+%     for(std::size_t i = 0; i < adj.size(); i++ )
+%     {
+%         for(std::size_t j = 0 ; j < adj[i].size(); j++ )
+%         {
+%             std::cout << adj[i][j]<< "  ";
+%         }
+%         std::cout << std::endl;
+%     }
+% }
+
+
+% void addEdge(std::vector<std::vector<int> >& adj, int u , int v)
+% {
+%     adj[u][v]=1;
+%     adj[v][u]=1;
+% }
+
+% \end{minted}	
+% \end{frame}
+
+% \begin{frame}{Creating incidence matrix}
+% \begin{minted}{c++}
+% #include<iostream>
+% #include<vector>
+% #include<utility>
+% void displayMatrix(const std::vector<std::vector<int> >& inc);
+% void add_edge(std::vector<std::vector<int> >& inc, int u, int v);
+% int ed_no=0;
+
+% int main() 
+% {
+% // Initialise array to hold incidence matrix, vec<>s is already dynamic
+%    std::vector <std::vector<int> > inc(3, std::vector<int>(4));
+% //there are 3 vertices and 4 edges in the graph pila has
+%    add_edge(inc, 0, 1);
+%    add_edge(inc, 0, 2);
+%    add_edge(inc, 1, 2);
+   
+%    displayMatrix(inc);
+% }
+
+% void displayMatrix(const std::vector<std::vector<int> >& inc) 
+% {
+%    for(std::size_t i = 0; i < inc.size(); i++)
+%    { 
+%       for(std::size_t j = 0; j < inc[i].size(); j++) 
+%       {
+%          std::cout << inc[i][j] << "  ";
+%       }
+%       std::cout << std::endl;
+%    }
+% }
+% void add_edge(std::vector<std::vector<int> >& inc, int u, int v) 
+% {//function to add edge into the matrix with edge number
+%    inc[u][ed_no]=1;
+%    inc[v][ed_no]=1;
+%    ed_no++; //increase the edge number
+% }
+% \end{minted}	
+% \end{frame}
 
 \end{document}
