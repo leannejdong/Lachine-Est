@@ -528,86 +528,120 @@ int main(int argc, char *argv[])
 %\end{lstlisting}
 \end{frame}
 
-% \begin{frame}[fragile,shrink=30]{Creating adjacency matrix}
-% \begin{minted}{c++}
-% #include <iostream>
-% #include <vector>
-% #include <utility>
-% void print_graph(const std::vector<std::vector<int> > &adj);
-% void addEdge(std::vector<std::vector<int> >& adj, int u, int v);
+\section{Solving the Power System}
 
-% int main()
-% {
-% // Initialise array to hold adjacency matrix, vec<>s is already dynamic
-%     std::vector<std::vector<int> > adj(3, std::vector<int>(3));
-%     addEdge(adj,0,1);     // edge from node 0 to node 1
-%     addEdge(adj,0,2);
-%     addEdge(adj,1,2);
-%     print_graph(adj);
-%   //  return 0;
-% }
-
-% void print_graph(const std::vector<std::vector<int> >& adj)
-% {
-%     for(std::size_t i = 0; i < adj.size(); i++ )
-%     {
-%         for(std::size_t j = 0 ; j < adj[i].size(); j++ )
-%         {
-%             std::cout << adj[i][j]<< "  ";
-%         }
-%         std::cout << std::endl;
-%     }
-% }
+\begin{frame}{Numerical Algorithms}
+	\begin{itemize}
+		\item Power system is represented by thousands of differential or algebraic equations (DAEs).
+		\item DAEs are discretized using an integration algorithm.
+		\item These equations are usually solved through Newton iteration.
+		\item The core of the solution of the nonlinear system of equations is the solution of the linear system of equations;. 
+	\end{itemize}
+\end{frame}
 
 
-% void addEdge(std::vector<std::vector<int> >& adj, int u , int v)
-% {
-%     adj[u][v]=1;
-%     adj[v][u]=1;
-% }
+\begin{frame}[fragile,shrink=30]{Example: Linear case}
+\begin{minted}{c++}
 
-% \end{minted}	
-% \end{frame}
+#include <iostream>
+#include </usr/include/eigen3/Eigen/Dense>
+ 
+using namespace std;
+using namespace Eigen;
+ 
+int main()
+{
+   Matrix3f A;
+   Vector3f b;
+   A << 0.2,-0.2,0,  -0.2,0.5,-0.2,  0,-0.2,0.3;
+   b << 3, 0, 0;
+   cout << "Here is the matrix A:\n" << A << endl;
+   cout << "Here is the vector b:\n" << b << endl;
+   Vector3f x = A.colPivHouseholderQr().solve(b);
+   cout << "The solution is:\n" << x << endl;
+}
+\end{minted}
+\end{frame}
 
-% \begin{frame}{Creating incidence matrix}
-% \begin{minted}{c++}
-% #include<iostream>
-% #include<vector>
-% #include<utility>
-% void displayMatrix(const std::vector<std::vector<int> >& inc);
-% void add_edge(std::vector<std::vector<int> >& inc, int u, int v);
-% int ed_no=0;
+\begin{frame}[fragile,shrink=5]{Creating adjacency matrix}
+\begin{minted}{c++}
+#include <iostream>
+#include <vector>
+#include <utility>
+void print_graph(const std::vector<std::vector<int> > &adj);
+void addEdge(std::vector<std::vector<int> >& adj, int u, int v);
 
-% int main() 
-% {
-% // Initialise array to hold incidence matrix, vec<>s is already dynamic
-%    std::vector <std::vector<int> > inc(3, std::vector<int>(4));
-% //there are 3 vertices and 4 edges in the graph pila has
-%    add_edge(inc, 0, 1);
-%    add_edge(inc, 0, 2);
-%    add_edge(inc, 1, 2);
+int main()
+{
+// Initialise array to hold adjacency matrix, vec<>s is already dynamic
+    std::vector<std::vector<int> > adj(3, std::vector<int>(3));
+    addEdge(adj,0,1);     // edge from node 0 to node 1
+    addEdge(adj,0,2);
+    addEdge(adj,1,2);
+    print_graph(adj);
+}
+
+void print_graph(const std::vector<std::vector<int> >& adj)
+{
+    for(std::size_t i = 0; i < adj.size(); i++ )
+    {
+        for(std::size_t j = 0 ; j < adj[i].size(); j++ )
+        {
+            std::cout << adj[i][j]<< "  ";
+        }
+        std::cout << std::endl;
+    }
+}
+
+
+void addEdge(std::vector<std::vector<int> >& adj, int u , int v)
+{
+    adj[u][v]=1;
+    adj[v][u]=1;
+}
+
+\end{minted}	
+\end{frame}
+
+\begin{frame}[fragile,shrink=5]{Creating incidence matrix}
+\begin{minted}{c++}
+#include<iostream>
+#include<vector>
+#include<utility>
+void displayMatrix(const std::vector<std::vector<int> >& inc);
+void add_edge(std::vector<std::vector<int> >& inc, int u, int v);
+int ed_no=0;
+
+int main() 
+{
+// Initialise array to hold incidence matrix, vec<>s is already dynamic
+   std::vector <std::vector<int> > inc(3, std::vector<int>(4));
+//there are 3 vertices and 4 edges in the graph pila has
+   add_edge(inc, 0, 1);
+   add_edge(inc, 0, 2);
+   add_edge(inc, 1, 2);
    
-%    displayMatrix(inc);
-% }
+   displayMatrix(inc);
+}
 
-% void displayMatrix(const std::vector<std::vector<int> >& inc) 
-% {
-%    for(std::size_t i = 0; i < inc.size(); i++)
-%    { 
-%       for(std::size_t j = 0; j < inc[i].size(); j++) 
-%       {
-%          std::cout << inc[i][j] << "  ";
-%       }
-%       std::cout << std::endl;
-%    }
-% }
-% void add_edge(std::vector<std::vector<int> >& inc, int u, int v) 
-% {//function to add edge into the matrix with edge number
-%    inc[u][ed_no]=1;
-%    inc[v][ed_no]=1;
-%    ed_no++; //increase the edge number
-% }
-% \end{minted}	
-% \end{frame}
+void displayMatrix(const std::vector<std::vector<int> >& inc) 
+{
+   for(std::size_t i = 0; i < inc.size(); i++)
+   { 
+      for(std::size_t j = 0; j < inc[i].size(); j++) 
+      {
+         std::cout << inc[i][j] << "  ";
+      }
+      std::cout << std::endl;
+   }
+}
+void add_edge(std::vector<std::vector<int> >& inc, int u, int v) 
+{//function to add edge into the matrix with edge number
+   inc[u][ed_no]=1;
+   inc[v][ed_no]=1;
+   ed_no++; //increase the edge number
+}
+\end{minted}	
+\end{frame}
 
 \end{document}
