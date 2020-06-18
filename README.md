@@ -1,3 +1,6 @@
 # Lachine-Est Engineering Summer School
 
-## Group 2: District Heating/Hydraulic, and Electrical Network
+## Review nodal approach to network modelling
+
+## Prototyping graph theoretics approach to network modelling
+ 
