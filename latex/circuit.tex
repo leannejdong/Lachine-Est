@@ -1,11 +1,10 @@
 \documentclass[xcolor=dvipsnames]{beamer}
-%\documentclass[pdf]{beamer}
 \usetheme{Warsaw}
+\usepackage[utf8x]{inputenc}
 %\usepackage{color}
-\usepackage[fleqn,tbtags]{mathtools}
-\usepackage{xcolor,minted}
-%\usepackage{amsmath}
-%\usepackage[dvipsnames]{xcolor}
+%\usepackage[fleqn,tbtags]{mathtools}
+\usepackage{xcolor,minted,hyperref,fontawesome,graphicx}
+
 \definecolor{UBCblue}{rgb}{0.04706, 0.13725, 0.26667} % UBC Blue (primary)
 
 \definecolor{UBCblue}{rgb}{0.04706, 0.13725, 0.26667} % UBC Blue (primary)
@@ -17,18 +16,6 @@
 \setbeamercolor{palette quaternary}{bg=UBCblue,fg=white}
 \setbeamercolor{structure}{fg=UBCblue} % itemize, enumerate, etc
 \setbeamercolor{section in toc}{fg=UBCblue} % TOC sections
-
-% Override palette coloring with secondary
-\setbeamercolor{subsection in head/foot}{bg=UBCgrey,fg=white}
-
-% \usepackage{listings}
-% \lstset{language=C++,
-%                 basicstyle=\ttfamily,
-%                 keywordstyle=\color{blue}\ttfamily,
-%                 stringstyle=\color{red}\ttfamily,
-%                 commentstyle=\color{green}\ttfamily,
-%                 morecomment=[l][\color{magenta}]{\#}
-% }
 
 \addtobeamertemplate{navigation symbols}{}{%
     \usebeamerfont{footline}%
@@ -398,8 +385,8 @@ So basically the inflow outflow relations,
 		\item Optimising circuit representation in the description file
 		\item Deal with sparse matrix case, the program efficiency could be boosted with the use of sparse matrix code
 		\item code could be cleaned up with C++, with introduction of linked lists represent loops and other graph structures
-		\item Can be extended to handgle time-dependent voltage and currents, instead of the linear system we have seen, we can manipulate the corresponding DEs and use a DE solver
-		\item Could be extended to include non-linear elements like semiconductor diades, transistors, etc, this would require the intro of a nonlinear equation solver
+		\item Can be extended to handle time-dependent voltage and currents, instead of the linear system we have seen, we can manipulate the corresponding DEs and use a DE solver
+		\item Could be extended to include non-linear elements like semiconductor diodes, transistors, etc, this would require the intro of a nonlinear equation solver
 	\end{itemize}
 \end{frame}
 
@@ -416,8 +403,8 @@ So basically the inflow outflow relations,
 	\item Study source code of insel engine;
 	\item Develop {\color{red}ideas} to extend the insel engine toward undirected graph;
 	\item Program and implement the ideas. With helps of modern C++ library Boost Graph Library. For instance, with use of 
-\href{boost.org/doc/libs/1_46_0/boost/graph/tiernan_all_cycles.hpp}{\beamergotobutton{tiernan\_all\_cycles.hpp}}
-and \href{boost.org/doc/libs/1_46_1/libs/graph/example/tiernan_print_cycles.cpp}{\beamergotobutton{tiernan\_print\_cycles.cpp}} we could find independent set of cycles, each cycle will then give us an equation. The set of cycles yield a system of equations.
+\href{https://www.boost.org/doc/libs/1_46_0/boost/graph/tiernan_all_cycles.hpp}{\beamergotobutton{tiernan\_all\_cycles.hpp}}
+and \href{https://www.boost.org/doc/libs/1_46_1/libs/graph/example/tiernan_print_cycles.cpp}{\beamergotobutton{tiernan\_print\_cycles.cpp}} we could find independent set of cycles, each cycle will then give us an equation. The set of cycles yield a system of equations.
 \end{itemize}
 
 \end{frame}
@@ -425,11 +412,7 @@ and \href{boost.org/doc/libs/1_46_1/libs/graph/example/tiernan_print_cycles.cpp}
 \begin{frame}[fragile,shrink=30]{C++ Boost Graph Library }
 %Here is \href{https://www.boost.org/doc/libs/1_46_0/boost/graph/tiernan_all_cycles.hpp}{tiernan_all_cycles.hpp} and 
 %\href{https://www.boost.org/doc/libs/1_46_1/libs/graph/example/tiernan_print_cycles.cpp}{tiernan_print_cycles.cpp}
-
-
 \begin{minted}{c++}
-
-
 #ifndef BOOST_GRAPH_CYCLE_HPP
 #define BOOST_GRAPH_CYCLE_HPP
 
@@ -539,6 +522,14 @@ int main(int argc, char *argv[])
 	\end{itemize}
 \end{frame}
 
+\begin{frame}{Generic Example of a Network model (Linear case, Juergen, 2019)}
+     	     \begin{figure}[!ht]
+  			\centering
+    		\includegraphics[width=0.9\textwidth]{slide31.png}
+   			% \caption[figure 5]{Independent loops with associated loop currents}
+    		\label{fig:juergen1}
+    	 \end{figure}
+\end{frame}
 
 \begin{frame}[fragile,shrink=30]{Example: Linear case}
 \begin{minted}{c++}
@@ -561,6 +552,29 @@ int main()
    cout << "The solution is:\n" << x << endl;
 }
 \end{minted}
+\end{frame}
+
+\begin{frame}{Generic Example of a Network model (Nonlinear case, Juergen, 2019)}
+     	     \begin{figure}[!ht]
+  			\centering
+    		\includegraphics[width=0.7\textwidth]{diode.png}
+   			% \caption[figure 5]{Independent loops with associated loop currents}
+    		\label{fig:juergen2}
+    	 \end{figure}
+\end{frame}
+
+\begin{frame}{The Shockley Equation}
+\[I=I_s\left(\frac{qV}{n\kappa T}-1\right)=\left(\frac{V}{nV_T}-1\right)\]
+where
+\begin{enumerate}
+    \item $I_s$ - \textbf{saturation current}. $I_s\tilde 10^{-14}$ for small signal diodes at $300$ Kelvin: .
+    \item $n$ - emission coefficient: $n=1,\,2$ for small signal diodes.
+    \item $\kappa=1.38\times 10^{-23} J/K$ - the Boltzman's constant.
+    \item $q=1.60\times 10^{-19}C$ - the charge of the electron;
+    \item $V_T$-thermal voltage- $V_T=\kappa T/q$
+\end{enumerate}
+We will now implement this in C++. Assume $n=2$, $T=300.$. Along with other constants, these together yields $\frac{q}{n\kappa T}$ The complete example can be easily implemented in C++ with  \href{http://eigen.tuxfamily.org/index.php?title=Main_Page}{\beamergotobutton{Eigen}}
+at \url{https://godbolt.org/z/p_LVgt}.
 \end{frame}
 
 \begin{frame}[fragile,shrink=5]{Creating adjacency matrix}

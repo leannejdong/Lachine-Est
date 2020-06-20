@@ -4,7 +4,7 @@
 #include<string>
 #include <cmath>
 
-#include </usr/include/eigen3/Eigen/Dense>
+#include <Eigen/Dense>
 
 void newton3d(Eigen::VectorXd& x,
               double tolerance,
@@ -30,7 +30,7 @@ int main()
     auto F = [](const Eigen::VectorXd &x){ 
    		Eigen::VectorXd res(3);
         res << 0.2*x(0)-0.2*x(1)-3, 
-        0.4*x(1)-0.2*x(0)-0.3*x(2)+3e-9*(exp(4*x(1)-1)), 
+        0.4*x(1)-0.2*x(0)-0.3*x(2)+1e-13*(exp(19*x(1)-1)), 
         -0.2*x(1)+0.3*x(2);
         return res;
 	};
@@ -38,13 +38,13 @@ int main()
 	auto DF= [] (const Eigen::VectorXd &x){
     	Eigen::MatrixXd J(3,3);
 		J << 0.2, -0.2, 0,
-		  	 -0.2, 0.4 + 4*3e-9*exp(4*x(1)), -0.3,
+		  	 -0.2, 0.4 + 19*1e-13*exp(19*x(1)), -0.3,
                0, -0.2, 0.3;
 	  	return J;
 	};	
 
     Eigen::VectorXd x(3);
-	x << 15.0, 6.0, 5.0; // initial value
+	x << 16.0, 2.0, 2.0; // initial value
     double tolerance = 1e-14;
 	newton3d(x, tolerance, F, DF);
     
