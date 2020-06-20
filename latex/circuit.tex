@@ -1,11 +1,10 @@
 \documentclass[xcolor=dvipsnames]{beamer}
-%\documentclass[pdf]{beamer}
 \usetheme{Warsaw}
+\usepackage[utf8x]{inputenc}
 %\usepackage{color}
-\usepackage[fleqn,tbtags]{mathtools}
-\usepackage{xcolor,minted}
-%\usepackage{amsmath}
-%\usepackage[dvipsnames]{xcolor}
+%\usepackage[fleqn,tbtags]{mathtools}
+\usepackage{xcolor,minted,hyperref,fontawesome,graphicx}
+
 \definecolor{UBCblue}{rgb}{0.04706, 0.13725, 0.26667} % UBC Blue (primary)
 
 \definecolor{UBCblue}{rgb}{0.04706, 0.13725, 0.26667} % UBC Blue (primary)
@@ -17,18 +16,6 @@
 \setbeamercolor{palette quaternary}{bg=UBCblue,fg=white}
 \setbeamercolor{structure}{fg=UBCblue} % itemize, enumerate, etc
 \setbeamercolor{section in toc}{fg=UBCblue} % TOC sections
-
-% Override palette coloring with secondary
-\setbeamercolor{subsection in head/foot}{bg=UBCgrey,fg=white}
-
-% \usepackage{listings}
-% \lstset{language=C++,
-%                 basicstyle=\ttfamily,
-%                 keywordstyle=\color{blue}\ttfamily,
-%                 stringstyle=\color{red}\ttfamily,
-%                 commentstyle=\color{green}\ttfamily,
-%                 morecomment=[l][\color{magenta}]{\#}
-% }
 
 \addtobeamertemplate{navigation symbols}{}{%
     \usebeamerfont{footline}%
@@ -425,11 +412,7 @@ and \href{boost.org/doc/libs/1_46_1/libs/graph/example/tiernan_print_cycles.cpp}
 \begin{frame}[fragile,shrink=30]{C++ Boost Graph Library }
 %Here is \href{https://www.boost.org/doc/libs/1_46_0/boost/graph/tiernan_all_cycles.hpp}{tiernan_all_cycles.hpp} and 
 %\href{https://www.boost.org/doc/libs/1_46_1/libs/graph/example/tiernan_print_cycles.cpp}{tiernan_print_cycles.cpp}
-
-
 \begin{minted}{c++}
-
-
 #ifndef BOOST_GRAPH_CYCLE_HPP
 #define BOOST_GRAPH_CYCLE_HPP
 
