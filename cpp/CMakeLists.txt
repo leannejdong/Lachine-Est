@@ -1,4 +1,6 @@
 project (newton2d)
 cmake_minimum_required (VERSION 3.5)
 
-add_executable (main main.cpp)
+find_package(Eigen3)
+
+add_executable (newton2d main.cpp)

@@ -228,3 +228,6 @@ TSWLatexianTemp*
 
 *.DS_Store
 main.pdf
+
+/build
+/.vscode

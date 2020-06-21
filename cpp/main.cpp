@@ -33,7 +33,7 @@ int main()
 	  	return J;
 	};
 
-	Eigen::VectorXd	V = {7.0, 14.0, 20.0}; // initial value
+	Eigen::Vector3d	V = {7.0, 14.0, 20.0}; // initial value
 	double tol=1E-14;
 	newton3d(V, tol, F, DF);
 

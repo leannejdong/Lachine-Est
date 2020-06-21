@@ -4,18 +4,18 @@
 #include<string>
 #include <cmath>
 
-#include </usr/include/eigen3/Eigen/Dense>
+#include <eigen3/Eigen/Dense>
 
 
-
-void newton3d(Eigen::VectorXd& V,
+template<class VectorT, class Fn1T, class Fn2T>
+void newton3d(VectorT& V,
               double tolerance,
-              std::function<Eigen::VectorXd(const Eigen::VectorXd&)> F,
-              std::function<Eigen::MatrixXd(const Eigen::VectorXd&)> DF
+              Fn1T F,
+              Fn2T DF
               )
 
 {
-	Eigen::Vector3d V_prev, h;
+	VectorT V_prev, h;
 	V << 7, 14, 20; // initial value
 	
     std::vector<double> errors;
