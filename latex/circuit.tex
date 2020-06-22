@@ -281,12 +281,12 @@ At each branch $b$, the total voltage drop $V^{(b)}$ across the branch is the su
 	V^{(b)} &= \sum_{b\in l}\sum_{l'\in L_b} R^{(b)}I_{l'}
 \end{align*}
 So basically the inflow outflow relations,
-\begin{align*}
+\begin{align}\label{eq1}
 	(10 + 200 + 100)I_1 - 200 I_2 - 100 I_3 + 0 I_4 &= 0\\
 	-200 I_1 + (20 + 100 + 200) I_2 + 0 I_3 - 100 I_4 &= 0\\
 	-100 I_1 + 0 I_2 + (100 + 10 + 200)I_3 - (200+10)I_4 &=10\\
 	0 I_1 - 100 I_2 - (10+200) I_3 + (100 + 7 + 13 + 200 + 10) I_4 &= 0
-\end{align*}
+\end{align}
 \end{frame}
 %To solve one can simply use Gaussian elimination in any language of your favor.
 
@@ -409,107 +409,107 @@ and \href{https://www.boost.org/doc/libs/1_46_1/libs/graph/example/tiernan_print
 
 \end{frame}
 
-\begin{frame}[fragile,shrink=30]{C++ Boost Graph Library }
-%Here is \href{https://www.boost.org/doc/libs/1_46_0/boost/graph/tiernan_all_cycles.hpp}{tiernan_all_cycles.hpp} and 
-%\href{https://www.boost.org/doc/libs/1_46_1/libs/graph/example/tiernan_print_cycles.cpp}{tiernan_print_cycles.cpp}
-\begin{minted}{c++}
-#ifndef BOOST_GRAPH_CYCLE_HPP
-#define BOOST_GRAPH_CYCLE_HPP
+% \begin{frame}[fragile,shrink=30]{C++ Boost Graph Library }
+% %Here is \href{https://www.boost.org/doc/libs/1_46_0/boost/graph/tiernan_all_cycles.hpp}{tiernan_all_cycles.hpp} and 
+% %\href{https://www.boost.org/doc/libs/1_46_1/libs/graph/example/tiernan_print_cycles.cpp}{tiernan_print_cycles.cpp}
+% \begin{minted}{c++}
+% #ifndef BOOST_GRAPH_CYCLE_HPP
+% #define BOOST_GRAPH_CYCLE_HPP
 
-#include <vector>
+% #include <vector>
 
-#include <boost/config.hpp>
-#include <boost/graph/graph_concepts.hpp>
-#include <boost/graph/graph_traits.hpp>
-#include <boost/graph/properties.hpp>
+% #include <boost/config.hpp>
+% #include <boost/graph/graph_concepts.hpp>
+% #include <boost/graph/graph_traits.hpp>
+% #include <boost/graph/properties.hpp>
 
-#include <boost/concept/detail/concept_def.hpp>
-namespace boost {
-    namespace concepts {
-        BOOST_concept(CycleVisitor,(Visitor)(Path)(Graph))
-        {
-            BOOST_CONCEPT_USAGE(CycleVisitor)
-            {
-                vis.cycle(p, g);
-            }
-        private:
-            Visitor vis;
-            Graph g;
-            Path p;
-        };
-    } /* namespace concepts */
-using concepts::CycleVisitorConcept;
-} /* namespace boost */
-#include <boost/concept/detail/concept_undef.hpp>
-\end{minted}
-%\end{lstlisting}
-\end{frame}
+% #include <boost/concept/detail/concept_def.hpp>
+% namespace boost {
+%     namespace concepts {
+%         BOOST_concept(CycleVisitor,(Visitor)(Path)(Graph))
+%         {
+%             BOOST_CONCEPT_USAGE(CycleVisitor)
+%             {
+%                 vis.cycle(p, g);
+%             }
+%         private:
+%             Visitor vis;
+%             Graph g;
+%             Path p;
+%         };
+%     } /* namespace concepts */
+% using concepts::CycleVisitorConcept;
+% } /* namespace boost */
+% #include <boost/concept/detail/concept_undef.hpp>
+% \end{minted}
+% %\end{lstlisting}
+% \end{frame}
 
-\begin{frame}[fragile,shrink=30]{C++ Boost Graph Library }
-\begin{minted}{c++}
-//[tiernan_print_cycles
-#include <iostream>
+% \begin{frame}[fragile,shrink=30]{C++ Boost Graph Library }
+% \begin{minted}{c++}
+% //[tiernan_print_cycles
+% #include <iostream>
 
-#include <boost/graph/directed_graph.hpp>
-#include <boost/graph/tiernan_all_cycles.hpp>
+% #include <boost/graph/directed_graph.hpp>
+% #include <boost/graph/tiernan_all_cycles.hpp>
 
-#include "helper.hpp"
+% #include "helper.hpp"
 
-using namespace std;
-using namespace boost;
+% using namespace std;
+% using namespace boost;
 
-// The cycle_printer is a visitor that will print the path that comprises
-// the cycle. Note that the back() vertex of the path is not the same as
-// the front(). It is implicit in the listing of vertices that the back()
-// vertex is connected to the front().
-template <typename OutputStream>
-struct cycle_printer
-{
-    cycle_printer(OutputStream& stream)
-        : os(stream)
-    { }
+% // The cycle_printer is a visitor that will print the path that comprises
+% // the cycle. Note that the back() vertex of the path is not the same as
+% // the front(). It is implicit in the listing of vertices that the back()
+% // vertex is connected to the front().
+% template <typename OutputStream>
+% struct cycle_printer
+% {
+%     cycle_printer(OutputStream& stream)
+%         : os(stream)
+%     { }
 
-    template <typename Path, typename Graph>
-    void cycle(const Path& p, const Graph& g)
-    {
-        // Get the property map containing the vertex indices
-        // so we can print them.
-        typedef typename property_map<Graph, vertex_index_t>::const_type IndexMap;
-        IndexMap indices = get(vertex_index, g);
+%     template <typename Path, typename Graph>
+%     void cycle(const Path& p, const Graph& g)
+%     {
+%         // Get the property map containing the vertex indices
+%         // so we can print them.
+%         typedef typename property_map<Graph, vertex_index_t>::const_type IndexMap;
+%         IndexMap indices = get(vertex_index, g);
 
-        // Iterate over path printing each vertex that forms the cycle.
-        typename Path::const_iterator i, end = p.end();
-        for(i = p.begin(); i != end; ++i) {
-            os << get(indices, *i) << " ";
-        }
-        os << endl;
-    }
-    OutputStream& os;
-};
+%         // Iterate over path printing each vertex that forms the cycle.
+%         typename Path::const_iterator i, end = p.end();
+%         for(i = p.begin(); i != end; ++i) {
+%             os << get(indices, *i) << " ";
+%         }
+%         os << endl;
+%     }
+%     OutputStream& os;
+% };
 
-// Declare the graph type and its vertex and edge types.
-typedef directed_graph<> Graph;
-typedef graph_traits<Graph>::vertex_descriptor Vertex;
-typedef graph_traits<Graph>::edge_descriptor Edge;
+% // Declare the graph type and its vertex and edge types.
+% typedef directed_graph<> Graph;
+% typedef graph_traits<Graph>::vertex_descriptor Vertex;
+% typedef graph_traits<Graph>::edge_descriptor Edge;
 
-int main(int argc, char *argv[])
-{
-    // Create the graph and read it from standard input.
-    Graph g;
-    read_graph(g, cin);
+% int main(int argc, char *argv[])
+% {
+%     // Create the graph and read it from standard input.
+%     Graph g;
+%     read_graph(g, cin);
 
-    // Instantiate the visitor for printing cycles
-    cycle_printer<ostream> vis(cout);
+%     // Instantiate the visitor for printing cycles
+%     cycle_printer<ostream> vis(cout);
 
-    // Use the Tiernan algorithm to visit all cycles, printing them
-    // as they are found.
-    tiernan_all_cycles(g, vis);
+%     // Use the Tiernan algorithm to visit all cycles, printing them
+%     // as they are found.
+%     tiernan_all_cycles(g, vis);
 
-    return 0;
-}
-\end{minted}
-%\end{lstlisting}
-\end{frame}
+%     return 0;
+% }
+% \end{minted}
+% %\end{lstlisting}
+% \end{frame}
 
 \section{Solving the Power System}
 
@@ -522,6 +522,59 @@ int main(int argc, char *argv[])
 	\end{itemize}
 \end{frame}
 
+\begin{frame}{Solving the previous concrete circuit problem}
+	Simplify (\ref{eq1}), write in matrix form, we have
+	\[
+\left(
+	\begin{array}{ccc|c}
+	  310 & -200 & -100 & 0\\
+	  -200 & 320 & 0 & -100\\
+	  -100 & 0 & 310 & -210\\
+	  0 & -100 & -210 & 330
+	\end{array}	
+\right)
+\]
+\textbf{Solution}: 
+
+We invoke C++ to solve the problem for us.
+
+\url{https://godbolt.org/z/eTu_xC}
+
+\end{frame}
+
+\begin{frame}[fragile,shrink=30]{Solution: implementation in C++ with \textbf{Eigen}}
+\begin{minted}{c++}
+
+#include <iostream>
+#include </usr/include/eigen3/Eigen/Dense>
+ 
+using namespace std;
+using namespace Eigen;
+ 
+int main()
+{
+   Matrix4f A;
+   Vector4f b;
+   A << 310,-200,-100,0, -200,320,0,-100, -100,0,310,-210, 0,-100,-210,330;
+   b << 0, 0, 10,0;
+   cout << "Here is the matrix A:\n" << A << endl;
+   cout << "Here is the vector b:\n" << b << endl;
+   Vector4f x = A.colPivHouseholderQr().solve(b);
+   cout << "The solution is:\n" << x << endl;
+}
+\end{minted}
+	The solution is found to be $0.199872$, $0.190431$, $0.238743$, $0.209634$.
+\end{frame}
+
+\begin{frame}{Create adjacency and incidence matrice}
+It is easy to draw in C++.
+	\begin{itemize}
+		\item Adjacency: \url{https://godbolt.org/z/zfxn8i}
+		\item Incidence: \url{https://godbolt.org/z/2ZaTPp}
+
+	\end{itemize}
+\end{frame}
+
 \begin{frame}{Generic Example of a Network model (Linear case, Juergen, 2019)}
      	     \begin{figure}[!ht]
   			\centering
@@ -530,6 +583,7 @@ int main(int argc, char *argv[])
     		\label{fig:juergen1}
     	 \end{figure}
 \end{frame}
+
 
 \begin{frame}[fragile,shrink=30]{Example: Linear case}
 \begin{minted}{c++}
