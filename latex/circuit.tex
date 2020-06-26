@@ -245,7 +245,7 @@ where $V$ is the vector of branch voltages and $B$ is known as the {\color{purpl
 \begin{frame}{The formal procedure}
 \begin{enumerate}
 	\item Describe the circuit in a computer-readable format;
-	\item Find a set of independent loops;
+	\item Extract a set of independent loops;
 	\item For each loop, we associate a loop current;
 	\item Use KVL to set up a system of $n$ equations, one for each independent loop;
 	\item Solve the system of equations and thus find the values of the loop currents ($I$);
@@ -513,6 +513,10 @@ and \href{https://www.boost.org/doc/libs/1_46_1/libs/graph/example/tiernan_print
 
 \section{Solving the Power System}
 
+\begin{frame}{An object oriented algorithms proposal}
+	The main reason to use C++ over C is because the OOP features allow handling data more efficiently.
+\end{frame}
+
 \begin{frame}{Numerical Algorithms}
 	\begin{itemize}
 		\item Power system is represented by thousands of differential or algebraic equations (DAEs).
@@ -520,6 +524,25 @@ and \href{https://www.boost.org/doc/libs/1_46_1/libs/graph/example/tiernan_print
 		\item These equations are usually solved through Newton iteration.
 		\item The core of the solution of the nonlinear system of equations is the solution of the linear system of equations;. 
 	\end{itemize}
+\end{frame}
+
+\begin{frame}{Review: Algorithms for loop extraction}
+	\begin{itemize}
+		\item DFS: Iveti\'c, Vasili\'c, Stani\'c and Prodanovi\'c (2016) identify the set of basis loops from which
+		minimum loops are obtained from transformations of spanning tree. Cycles extracted in their work may not 
+		be minimal ones.
+		\item Gotlieb and Corneil (1967)
+		\item Tiernan (1970)
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Algorithms for equations solver}
+\begin{itemize}
+	\item Gaussian elimination (Only for linear equations)
+	\item Iterative methods: {\color{red}Newton-type} algorithms;
+	\item Hardy-cross method: suitable for large network
+\end{itemize}
+	
 \end{frame}
 
 \begin{frame}{Solving the previous concrete circuit problem}
