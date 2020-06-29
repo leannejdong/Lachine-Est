@@ -4,7 +4,7 @@
 \usetheme{Warsaw}
 %\usepackage{color}
 \usepackage[fleqn,tbtags]{mathtools}
-\usepackage{xcolor,minted}
+\usepackage{xcolor,minted,tikz}
 %\usepackage[dvipsnames]{xcolor}
 \definecolor{UBCblue}{rgb}{0.04706, 0.13725, 0.26667} % UBC Blue (primary)
 
@@ -228,12 +228,13 @@ Note: $\Delta p$ denoting the difference in pressure head between the two pipes 
 \begin{frame}{Analogy of rules}
 	\begin{table}[h!]
 		\begin{center}
+			\tikz\node[draw=red,thick,double,inner sep=1pt]{
 			\begin{tabular}{p{15mm}|p{15mm}|p{15mm}|p{15mm}}
 				\hline
 				Electrical \newline network & Kirchoff's current \newline law & Kirchoff's voltage \newline law & Ohm's Law\\
 				\hline
 				District heating \newline network & Continuity of flow & Loop pressure \newline equations & Head loss \newline equations\\
-			\end{tabular}
+			\end{tabular}};
 		\end{center}
 	\end{table}
 \end{frame}
@@ -260,15 +261,27 @@ later
 
 \section{Thermal model}
 
+\begin{frame}{Preliminary: Numerical solution of differential equations}
+	
+\end{frame}
+
 \subsection{Thermal Calculation}
 
-\begin{frame}{Numerical solution via finite elements}
+\begin{frame}{Numerical solution via finite difference or finite elements}
 	By the first law of thermodynamics, the variation of the enthalpy of one pipe element is modelled by the
 	following hyperbolic PDE:
 
 	\begin{align}
 		\frac{\partial(mf)}{\partial t}=\dot{H}-\dot{H}(x+\Delta x)-d\dot{Q}_l
 	\end{align}
+\end{frame}
+
+\begin{frame}{Numerical Solution of the heat transfer in a pipe}
+	
+\end{frame}
+
+\begin{frame}{Numerical Solution of heat transfer in the network}
+	
 \end{frame}
 
 % \begin{frame}{Model Validation}

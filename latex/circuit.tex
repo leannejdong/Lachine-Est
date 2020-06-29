@@ -3,7 +3,7 @@
 \usepackage[utf8x]{inputenc}
 %\usepackage{color}
 %\usepackage[fleqn,tbtags]{mathtools}
-\usepackage{xcolor,minted,hyperref,fontawesome,graphicx}
+\usepackage{xcolor,minted,hyperref,fontawesome,graphicx,mathtools}
 
 \definecolor{UBCblue}{rgb}{0.04706, 0.13725, 0.26667} % UBC Blue (primary)
 
@@ -38,14 +38,14 @@
 \end{frame}
 
 
-\begin{frame}<presentation:0>{Road map}
-	\begin{itemize}
-		\item {\color{purple}Graph theory} 
-		\item {\color{purple}Network topology for electric circuit} : Spanning trees, circle basis and independent loops (Kirchhoff's law equations)
-		\item {\color{purple}Setting up the Kirchoff's law equations} 
-		\item {\color{purple}Solving the circuit equations}
-	\end{itemize}
-\end{frame}
+% \begin{frame}<presentation:0>{Road map}
+% 	\begin{itemize}
+% 		\item {\color{purple}Graph theory} 
+% 		\item {\color{purple}Network topology for electric circuit} : Spanning trees, circle basis and independent loops (Kirchhoff's law equations)
+% 		\item {\color{purple}Setting up the Kirchoff's law equations} 
+% 		\item {\color{purple}Solving the circuit equations}
+% 	\end{itemize}
+% \end{frame}
 
 %% normal frame
 \section{Graph theoretic foundation}
@@ -242,6 +242,18 @@ where $V$ is the vector of branch voltages and $B$ is known as the {\color{purpl
 	By the superposition principle, the topological matrices $A$ and $B$ both contain the same full information on the assembly of branches.
 \end{frame}
 
+\begin{frame}{Two ways of modelling circuit networks}
+\begin{itemize}
+	\item The flow of electrons
+	\item The flow of positrons
+\end{itemize}
+We use the positrons approach. That is
+\begin{align*}
+V_a	\xrightarrow[R]{\qquad I \qquad} V_b \qquad I>0\,\,\text{implies}\,\,V_a>V_b
+\end{align*}
+	
+\end{frame}
+then $IR=V_a-V_b.$
 \begin{frame}{The formal procedure}
 \begin{enumerate}
 	\item Describe the circuit in a computer-readable format;
@@ -598,6 +610,8 @@ It is easy to draw in C++.
 	\end{itemize}
 \end{frame}
 
+
+\section{Exercises}
 \begin{frame}{Generic Example of a Network model (Linear case, Juergen, 2019)}
      	     \begin{figure}[!ht]
   			\centering
@@ -605,6 +619,31 @@ It is easy to draw in C++.
    			% \caption[figure 5]{Independent loops with associated loop currents}
     		\label{fig:juergen1}
     	 \end{figure}
+\end{frame}
+
+\begin{frame}{Network graph}
+     	 \begin{figure}[!ht]
+  			\centering
+    		\includegraphics[width=0.9\textwidth]{circuitj.png}
+   			% \caption[figure 5]{Independent loops with associated loop currents}
+    		\label{fig:juergen2}
+    	 \end{figure}	
+KVL: 	$\sum_{loop} V_k = 0$
+\end{frame}
+
+\begin{frame}{Solution}
+	\textbf{Circuit A}:
+\[	V_1 = 5\times 3 - 3\times 10 +10 I =0 \]
+
+	\textbf{Circuit B}:
+\[	-5I - 10 I -10 I +3\times 10 =0 \]
+implies $I=\frac{30}{25}=\frac{6}{5}$, then
+\[V_1 = 45 - 10I=33.\]
+We now find $V_2$, $V_3$ by 
+\begin{align*}
+	V_1 - V_2 &= 3\times 5 \rightarrow\, V_2 = V_1 - 15 = 18\\
+	V_2 - V_3 &= 5I = 6 \rightarrow\, V_3 = 12
+\end{align*}
 \end{frame}
 
 
