@@ -17,8 +17,7 @@
     }
 
     @article{hasseick2013,
-      title={Impact of load structure variation and solar thermal energy
-integration on an existing district heating network},
+      title={Impact of load structure variation and solar thermal energy integration on an existing district heating network},
       author={Ilyes Ben Hassine, Ursula Eicker},
       journal={Applied Thermal Engineering},
       volume={50},
