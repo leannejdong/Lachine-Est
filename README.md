@@ -1,8 +1,10 @@
 # Lecture Material for Lachine-Est Engineering Summer School 
 
-## Review nodal approach to network modelling
+## Prototyping graph theoretics approach to network computations and simulation
 
-## Prototyping graph theoretics approach to network modelling
+### Electrical problem
+
+### Hydraulic problem
 
 ## Citation
 

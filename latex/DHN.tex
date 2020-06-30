@@ -168,7 +168,7 @@ Assuming flow consumption is zero,
 \end{align}
 More concretely, 
 \begin{align}\label{eq1}
-	A\dot{V}=0
+	A\dot{V}=\vec{0}
 \end{align}
 with the edge flow vector $\dV=\{\dV_1,\dV_2,\dV_z\}$, where $z$ is the number of edges.
 \end{frame}
@@ -216,7 +216,7 @@ Matrix $B$ is a row for every loop and a column for every edge.
 	 \end{align*}
 \end{frame}
 
-\begin{frame}{Loop pressure equations}
+\begin{frame}[fragile,shrink=30]{Loop pressure equations}
 By the \textbf{conservation of energy}, the vector of loop pressure residual equals to 0
 	\begin{align}\label{eq2}
 	\Delta P = 0 
@@ -265,11 +265,11 @@ For every pipe, one gets
 \end{align}
 Hence (\ref{eq4}) becomes
 \begin{align}\label{eq8}
-	B\cdot f(\dV)=0
+	B\cdot f(\dV)=\vec{0}
 \end{align}
 Substitute (\ref{eq5}) into (\ref{eq8}) we obtain:
 \begin{align}
-	B\cdot f(B^T\cdot \dV_L)=0
+	B\cdot f(B^T\cdot \dV_L)=\vec{0}
 \end{align}
 Apply the vector function
 \begin{align}\label{eq10}
@@ -277,7 +277,7 @@ Apply the vector function
 \end{align}
 Equation (\ref{eq10}) can be written as
 \begin{align}\label{eq11}
-	F(\dV_L)=0
+	F(\dV_L)=\vec{0}
 \end{align}
 The system of nonlinear equation (\ref{eq11}) can be solved via using Newton Raphson algorithm in following steps. 
 First, we must define $F(\dV_L)$ and the Jacobien $DF$.
@@ -343,7 +343,7 @@ First, we must define $F(\dV_L)$ and the Jacobien $DF$.
 \end{columns}
 \textbf{Newton iteration}:
 \begin{align*}
- 	V^{k+1}:= V^k - \underbrace{DF(V^k)^{-1}F(V^k)}_{\text{correction}},\qquad DF(V^k)\,\,\text{sufficiently regular}
+ 	V^{k+1}:= V^k - \underbrace{DF(V^k)^{-1}F(V^k)}_{\text{newton correction}},\qquad DF(V^k)\,\,\text{sufficiently regular}
  \end{align*} 
 
 \end{frame}
