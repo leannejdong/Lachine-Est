@@ -5,6 +5,7 @@
 %\usepackage{color}
 \usepackage[fleqn,tbtags]{mathtools,amsmath}
 \usepackage{xcolor,minted,tikz,circuitikz}
+%\usepackage{intersections, calc}
 \setcounter{MaxMatrixCols}{13}
 %\usepackage[dvipsnames]{xcolor}
 \definecolor{UBCblue}{rgb}{0.04706, 0.13725, 0.26667} % UBC Blue (primary)
@@ -22,8 +23,8 @@
 % Override palette coloring with secondary
 \setbeamercolor{subsection in head/foot}{bg=UBCgrey,fg=white}
 
-\def\*#1{\mathbf{#1}}
-\def\ab{ab}
+%\newvector[A,\mathbf{A}]{A}
+
 
 \newcommand{\dV}{\dot{V}}
 \mode<presentation>{}
@@ -105,110 +106,31 @@ Ask yourself:
 
 %\subsection{Solution of linear systems}
 
-\subsection{Solution of nonlinear systems}
 
-\begin{frame}[shrink=20]{Nonlinear system and root finding}
 
-\begin{itemize}
-	%\item  $f$ is nonlinear when it fails the superposition principle: $f(x_1+x_2+\cdots)\neq f(x_1)+f(x_2)+\cdots$.
-	\item A system of nonlinear equation is a set of equations 
-	\begin{align*}
-		f_1(x_1,x_2,\cdot,x_n)&=0,\\
-		f_2(x_1,x_2,\cdot,x_n)&=0,\\
-		&\shortvdotswithin{=}
-		f_n(x_1,x_2,\cdot,x_n)&=0.
-	\end{align*}
-%where $(x_1,x_2,\cdots, x_n)\in\mathbb{R}^n$ and each $f_i$ is a nonlinear real function, $i=1,2,\cdots,n$
-	\item There are three type of nonlinear system in hydraulic model. The solutions are usually found via 
-	\textbf{Newton-Raphson} or Hardy Cross Method.
+% \subsection{Control theory}
 
-	\item An example of nonlinear system from the DHN in Scharnhauser Park (Hassine and Eicker 2011)
-
-	\begin{align*}
-		x^2-2x-y+0.5=0\\
-		x^2+4*y^2-y-4=0
-	\end{align*}
-
-	\item To find the solution (root), we would use the C++ Linear algebra library {\color{purple}Eigen}.  %Note, Eigen might not work for more complicated nonlinearity...
-	Codes: \url{https://godbolt.org/z/9NPKAA}
-
-\end{itemize}
-\end{frame}
-
-% \begin{frame}[fragile,shrink=30]
-% \begin{minted}{c++}
-
-% 	#include <iostream>
-% 	#include </usr/include/eigen3/Eigen/Dense>
-% 	#include <cmath>
-% 	#include <vector>
-
-% 	void newton2d()
-% 	{
-% 		// F
-% 		auto F = [](const Eigen::Vector2d &x){ 
-% 	   		Eigen::Vector2d res;
-% 			res << pow(x(0),2) -2*x(0)-x(1)+0.5, pow(x(0),2) +4*pow(x(1),2)-x(1)-4;
-% 			return res;
-% 		};
-
-% 		// jacobian of F
-% 		auto DF= [] (const Eigen::Vector2d &x){
-% 			Eigen::Matrix2d J;
-% 			J << 2*x(0)-2	, -1, 
-% 			  	 2*x(0)		, 8*x(1);
-% 		  	return J;
-% 		};	
-
-% 		Eigen::Vector2d x, x_ast, s;
-% 		x << 2, 0.25; // initial value
-% 		x_ast << 1.9007, 0.3112; // solution
-% 	   	double tol=1E-10;
-
-% 		std::vector<double> errors;
-% 		errors.push_back((x-x_ast).norm());
-
-% 		do
-% 		{
-% 			s = DF(x).lu().solve(F(x));
-% 		   	x = x-s; // newton iteration
-% 			errors.push_back((x-x_ast).norm());
-% 		}
-% 		while (s.norm() > tol*x.norm());
-
-% 		// create eigen vector from std::vector
-% 		unsigned int n = errors.size();
-% 		Eigen::Map<Eigen::VectorXd> err(errors.data(), n);
-
-% 		std::cout << "solution" << std::endl;
-% 		std::cout << x << std::endl;
-		
-% 		std::cout << "Errors:" << std::endl;
-% 		std::cout << err << std::endl;
-
-% #include "newton2d.hpp"
-  
-% int main()
-% {
-% 	newton2d();
-% }
-% //The solution is found as 1.94 and 0.39.
-% \end{minted}
+% \begin{frame}{Background}
+% 	Please refer to LC Evans control theory course \url{https://math.berkeley.edu/~evans/control.course.pdf}
 % \end{frame}
 
-\subsection{Control theory}
+% \begin{frame}{Problem}
+% 	Control problem: (1) how do you adjust the flow rate in individual substations to that the return temperature has a given value (for example always 40°C)?
+% \end{frame}
 
-\begin{frame}{Background}
-	Please refer to LC Evans control theory course \url{https://math.berkeley.edu/~evans/control.course.pdf}
+\section{Hydraulic Calculation}
+
+\begin{frame}{Network graph}
+	 	\begin{figure}[!ht]
+  			\centering
+    		\includegraphics[width=5.5cm,height=5.5cm]{networkg.png}
+    		 \caption[figure 3]{Network graph of the DH network in Scharnhauser Park}
+    	\end{figure}
 \end{frame}
-
-\begin{frame}{Problem}
-	Control problem: (1) how do you adjust the flow rate in individual substations to that the return temperature has a given value (for example always 40°C)?
-\end{frame}
-
-\section{Hydraulic Model}
 
 \subsection{Numerical Solution}
+
+
 \begin{frame}{Assumption}
 \begin{itemize}
 	\item 	The basic assumption for the calculation is incompressible media.
@@ -245,8 +167,8 @@ Assuming flow consumption is zero,
 	\sum \dot{V}_{\text{in}}-\sum \dot{V}_{\text{out}} = 0
 \end{align}
 More concretely, 
-\begin{align}
-	\*A\dot{\*V}=0
+\begin{align}\label{eq1}
+	A\dot{V}=0
 \end{align}
 with the edge flow vector $\dV=\{\dV_1,\dV_2,\dV_z\}$, where $z$ is the number of edges.
 \end{frame}
@@ -296,7 +218,7 @@ Matrix $B$ is a row for every loop and a column for every edge.
 
 \begin{frame}{Loop pressure equations}
 By the \textbf{conservation of energy}, the vector of loop pressure residual equals to 0
-	\begin{align}
+	\begin{align}\label{eq2}
 	\Delta P = 0 
 	\end{align}
 
@@ -305,14 +227,13 @@ That is, at each loop,
 \sum^{13}_{i=1}\Delta p_i = 0
 \end{align}
 In each loop, the pressure losses residual is composed of the pipe pressure losses in the same loop. In other words,
-\begin{align}
+\begin{align}\label{eq3}
 	\Delta P = B \Delta p
 \end{align}
 Hence we have 
-\begin{align}
-	B\Delta p = 0
+\begin{align}\label{eq4}
+	B\Delta p = \vec{0}
 \end{align}
-\[B\Delta p = 0\]
 Note, the connecting branch currents are independent of each other, as they belong to different meshes. The column
 of $B$-matrix indicate which connection branch current flow through the individual branches. That is,
 \begin{align*}
@@ -325,83 +246,174 @@ of $B$-matrix indicate which connection branch current flow through the individu
 \end{align*}
  The total current of a branch results as 
 a linear superposition of these independent currents. More simply,
-\[\dV = B^T \dV_L\]
+\begin{align}\label{eq5}
+	\dV = B^T \dV_L
+\end{align}
 where $\dV=\{\dV_1, \dV_2, \dV_3\}.$ The equation dramatically reduces the number of unknown entities required to just three!
 \end{frame}
 
-\begin{frame}{Loop pressure equations}
+\begin{frame}[fragile,shrink=30]{Loop pressure equations}
 	Each pipe is considered as a flow resistance whose pressure is proportional to the square of its flow rate. That is,
-	\begin{align}
+	\begin{align}\label{eq6}
 		\Delta p = K \dV^2
 	\end{align}
 where $K$ is the vector of resistance coefficient of each pipe given by the Darcy-Weisbech equation.
 
 For every pipe, one gets
-\begin{align*}
+\begin{align}\label{eq7}
 	\Delta p = f(\dV)
-\end{align*}
-\end{frame}
-\begin{frame}{Network Topology}
-The description of the heating network is based on graph theory. First we need to form the topological matrice which show the structure of the mesh in matrix form. (See circuit.pdf)
-
-\end{frame}
-\begin{frame}{Graph Theory}
-	Recall, the graph theory consider a network to be a compose of
-	\begin{itemize}
-		\item Nodes (Vertice)
-		\item Edges (Branches are edges of a spanning tree)
-		\item Loops 
-		\item Meshes: a loop of a planar graph with no other branches inside
-		\item Tree: a graph that is connected but got no loops
-		\item Spanning Tree
-	\end{itemize}
-\end{frame}
-
-\begin{frame}{Solution of network equation system}
-later
-\end{frame}
-
-
-\section{Thermal model}
-
-\begin{frame}{Preliminary: Numerical solution of differential equations}
-	
+\end{align}
+Hence (\ref{eq4}) becomes
+\begin{align}\label{eq8}
+	B\cdot f(\dV)=0
+\end{align}
+Substitute (\ref{eq5}) into (\ref{eq8}) we obtain:
+\begin{align}
+	B\cdot f(B^T\cdot \dV_L)=0
+\end{align}
+Apply the vector function
+\begin{align}\label{eq10}
+	F=f*B^T
+\end{align}
+Equation (\ref{eq10}) can be written as
+\begin{align}\label{eq11}
+	F(\dV_L)=0
+\end{align}
+The system of nonlinear equation (\ref{eq11}) can be solved via using Newton Raphson algorithm in following steps. 
+First, we must define $F(\dV_L)$ and the Jacobien $DF$.
 \end{frame}
 
-\subsection{Thermal Calculation}
+\subsubsection{Solution of nonlinear systems}
 
-\begin{frame}{Numerical solution via finite difference or finite elements}
-	By the first law of thermodynamics, the variation of the enthalpy of one pipe element is modelled by the
-	following hyperbolic PDE:
+\begin{frame}[shrink=20]{Nonlinear system and root finding}
 
-	\begin{align}
-		\frac{\partial(mf)}{\partial t}=\dot{H}-\dot{H}(x+\Delta x)-d\dot{Q}_l
-	\end{align}
+\begin{itemize}
+	%\item  $f$ is nonlinear when it fails the superposition principle: $f(x_1+x_2+\cdots)\neq f(x_1)+f(x_2)+\cdots$.
+	\item A system of nonlinear equation is a set of equations 
+	\begin{align*}
+		f_1(x_1,x_2,\cdot,x_n)&=0,\\
+		f_2(x_1,x_2,\cdot,x_n)&=0,\\
+		&\shortvdotswithin{=}
+		f_n(x_1,x_2,\cdot,x_n)&=0.
+	\end{align*}
+%where $(x_1,x_2,\cdots, x_n)\in\mathbb{R}^n$ and each $f_i$ is a nonlinear real function, $i=1,2,\cdots,n$
+	\item There are three type of nonlinear system in hydraulic model. The solutions are usually found via 
+	\textbf{Newton-Raphson} or Hardy Cross Method.
+
+	\item An example of nonlinear system from the DHN in Scharnhauser Park (Hassine and Eicker 2011)
+
+	\begin{align*}
+		x^2-2x-y+0.5=0\\
+		x^2+4*y^2-y-4=0
+	\end{align*}
+
+	\item To find the solution (root), we would use the C++ Linear algebra library {\color{purple}Eigen}.  %Note, Eigen might not work for more complicated nonlinearity...
+	Codes: \url{https://godbolt.org/z/9NPKAA}
+
+\end{itemize}
 \end{frame}
 
-\begin{frame}{Numerical Solution of the heat transfer in a pipe}
-	
+\begin{frame}{Newtons algorithm}
+
+\begin{columns}
+	\begin{column}{.55\textwidth}
+		\begin{itemize}
+		\item Scalar case
+			\begin{enumerate}
+				\item Input: $v_0$, tolerance, eps
+				\item Repeat
+				\[v_0 = v - f(v)/f'(v)\]
+				until $v_n-v\le$eps
+				\item Print $v_n$, which is the root.
+			\end{enumerate}
+		\end{itemize}
+	\end{column}
+	\begin{column}{.75\textwidth}
+ 		\begin{itemize}
+		\item Vector case
+			\begin{enumerate}
+				\item Input: $V_0$, \textbf{tolerance}, \textbf{eps}
+				\item Repeat
+				\[V_0 = V - DF(V)^{-1} F(V)\]
+				until $V_n-V\le$eps
+				\item Print $V_n$, which is the root.
+			\end{enumerate}
+		\end{itemize}
+    \end{column}
+\end{columns}
+\textbf{Newton iteration}:
+\begin{align*}
+ 	V^{k+1}:= V^k - \underbrace{DF(V^k)^{-1}F(V^k)}_{\text{correction}},\qquad DF(V^k)\,\,\text{sufficiently regular}
+ \end{align*} 
+
 \end{frame}
 
-\begin{frame}{Numerical Solution of heat transfer in the network}
-	
-\end{frame}
+\subsection{Simulation}
 
-% \begin{frame}{Model Validation}
-% 	later
+\begin{frame}
+	We would follow the same method used in electrical case. See circuit.pdf.
+\end{frame}
+% \begin{frame}{Network Topology}
+% The description of the heating network is based on graph theory. First we need to form the topological matrice which show the structure of the mesh in matrix form. (See circuit.pdf)
+
+% \end{frame}
+% \begin{frame}{Graph Theory}
+% 	Recall, the graph theory consider a network to be a compose of
+% 	\begin{itemize}
+% 		\item Nodes (Vertice)
+% 		\item Edges (Branches are edges of a spanning tree)
+% 		\item Loops 
+% 		\item Meshes: a loop of a planar graph with no other branches inside
+% 		\item Tree: a graph that is connected but got no loops
+% 		\item Spanning Tree
+% 	\end{itemize}
 % \end{frame}
 
-\section{Hydraulic-Thermal Model}
+% \begin{frame}{Solution of network equation system}
+% later
+% \end{frame}
 
-\subsection{Calculation}
 
-\begin{frame}{Network structure}
-	to be added
-\end{frame}
+% \section{Thermal model}
 
-\begin{frame}{Calculations}
-		to be added
-\end{frame}
+% \begin{frame}{Preliminary: Numerical solution of differential equations}
+	
+% \end{frame}
+
+% \subsection{Thermal Calculation}
+
+% \begin{frame}{Numerical solution via finite difference or finite elements}
+% 	By the first law of thermodynamics, the variation of the enthalpy of one pipe element is modelled by the
+% 	following hyperbolic PDE:
+
+% 	\begin{align}
+% 		\frac{\partial(mf)}{\partial t}=\dot{H}-\dot{H}(x+\Delta x)-d\dot{Q}_l
+% 	\end{align}
+% \end{frame}
+
+% \begin{frame}{Numerical Solution of the heat transfer in a pipe}
+	
+% \end{frame}
+
+% \begin{frame}{Numerical Solution of heat transfer in the network}
+	
+% \end{frame}
+
+% % \begin{frame}{Model Validation}
+% % 	later
+% % \end{frame}
+
+% \section{Hydraulic-Thermal Model}
+
+% \subsection{Calculation}
+
+% \begin{frame}{Network structure}
+% 	to be added
+% \end{frame}
+
+% \begin{frame}{Calculations}
+% 		to be added
+% \end{frame}
 
 
 \end{document}
