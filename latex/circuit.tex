@@ -251,9 +251,8 @@ We use the positrons approach. That is
 \begin{align*}
 V_a	\xrightarrow[R]{\qquad I \qquad} V_b \qquad I>0\,\,\text{implies}\,\,V_a>V_b
 \end{align*}
-	
-\end{frame}
 then $IR=V_a-V_b.$
+\end{frame}
 \begin{frame}{The formal procedure}
 \begin{enumerate}
 	\item Describe the circuit in a computer-readable format;
@@ -525,8 +524,15 @@ and \href{https://www.boost.org/doc/libs/1_46_1/libs/graph/example/tiernan_print
 
 \section{Solving the Power System}
 
-\begin{frame}{An object oriented algorithms proposal}
-	The main reason to use C++ over C is because the OOP features allow handling data more efficiently.
+\begin{frame}{Proposal: object oriented algorithms in C++}
+\begin{itemize}
+	\item OOP features allow handling data more efficiently. 
+	\item C++ is the most ideal language for building either an academic or for a live simulation system given \textbf{Performance} is the key. 
+	\item  In case any security issue arise from accepting data over a network, we can consider switching to Rust. From C++ to Rust is not a long learning curve as they are relative.
+	\item Java, C\# are relatively memory safe. But low in performance compared to C++.
+	\item We would encounter some PDEs in the CFD component later on, C++ allows us to integrate GPU in obtainling massively-parallel PDE solutions. Specifically, for solving large, spare liner or nonlinear system.
+\end{itemize}
+
 \end{frame}
 
 \begin{frame}{Numerical Algorithms}
