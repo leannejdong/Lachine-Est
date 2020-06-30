@@ -3,8 +3,9 @@
 %\documentclass[pdf]{beamer}
 \usetheme{Warsaw}
 %\usepackage{color}
-\usepackage[fleqn,tbtags]{mathtools}
-\usepackage{xcolor,minted,tikz}
+\usepackage[fleqn,tbtags]{mathtools,amsmath}
+\usepackage{xcolor,minted,tikz,circuitikz}
+\setcounter{MaxMatrixCols}{13}
 %\usepackage[dvipsnames]{xcolor}
 \definecolor{UBCblue}{rgb}{0.04706, 0.13725, 0.26667} % UBC Blue (primary)
 
@@ -21,19 +22,14 @@
 % Override palette coloring with secondary
 \setbeamercolor{subsection in head/foot}{bg=UBCgrey,fg=white}
 
-% \usepackage{listings}
-% \lstset{language=C++,
-%                 basicstyle=\ttfamily,
-%                 keywordstyle=\color{blue}\ttfamily,
-%                 stringstyle=\color{red}\ttfamily,
-%                 commentstyle=\color{green}\ttfamily,
-%                 morecomment=[l][\color{magenta}]{\#}
-% }
+\def\*#1{\mathbf{#1}}
+\def\ab{ab}
 
+\newcommand{\dV}{\dot{V}}
 \mode<presentation>{}
 \title{Modelling District Heating and Cooling network}
 \author{Leanne Dong}
-
+\institute{Gina Cody School of Engineering and Computer Science\\ Concordia University Montr\'eal}
 \begin{document}
 %% title frame
 \begin{frame}
@@ -239,19 +235,126 @@ Note: $\Delta p$ denoting the difference in pressure head between the two pipes 
 	\end{table}
 \end{frame}
 
-\begin{frame}{Contuinity of flow}
+\begin{frame}{Contuinity of flow/Convervation of Mass}
+The total amount of mass flow enter into a node is equal to the mass flow that leave the node plus the flow consumption at the node.
 \begin{align}
 		\sum \dot{V}_{\text{in}}-\sum \dot{V}_{\text{out}} = \dot{V}_{\text{mass}}
 \end{align}
+Assuming flow consumption is zero, 
+\begin{align}
+	\sum \dot{V}_{\text{in}}-\sum \dot{V}_{\text{out}} = 0
+\end{align}
+More concretely, 
+\begin{align}
+	\*A\dot{\*V}=0
+\end{align}
+with the edge flow vector $\dV=\{\dV_1,\dV_2,\dV_z\}$, where $z$ is the number of edges.
+\end{frame}
+
+\begin{frame}[fragile,shrink=30]{Example: Benhassin\& Eicker 2013}
+\begin{equation*}
+	A = 
+\begin{pmatrix*}
+1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & -1 & 0 & 0\\
+-1 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0  & 0 & 0\\
+0 & -1 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & -1 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & -1 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & -1 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & -1 & 1 & 0 & 0 & 0 & 0 & 0 &-1\\
+0 & 0 & 0 & 0 & 0 & 0 & -1 & 1 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & -1 & 1 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & -1 & 1 & 0 & -1 & 1\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & -1 & 1 & 0 & 0
+\end{pmatrix*}
+\end{equation*}
+
+\begin{align*}
+	B =
+\begin{pmatrix}
+	1 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 1 & 1 & 0\\
+	0 & 0 & 1 & 1 & 1 & 1 & 0 & 0 & 0 & 0 & 0 & -1 & -1\\
+	0 & 0 & 0 & 0 & 0 & 0 & 1 & 1 & 1 & 0 & 0 & 0 & 1
+\end{pmatrix}
+\end{align*}
+
+Matrix $A$ is the incidence matrix that joins the nodes and the adjacent edges. \\
+
+Matrix $B$ is a row for every loop and a column for every edge.
+\end{frame}
+
+\begin{frame}{Example: Benhassin\& Eicker 2013}
+	For node 1, the conservation of mass is stated as 
+	\begin{align*}
+	 	\dV_1-\dV_{11}=0
+	 \end{align*} 
+	 or
+	 \begin{align*}
+	 	A\dV = 0
+	 \end{align*}
 \end{frame}
 
 \begin{frame}{Loop pressure equations}
-	\[ \Delta P = 0 \]
+By the \textbf{conservation of energy}, the vector of loop pressure residual equals to 0
+	\begin{align}
+	\Delta P = 0 
+	\end{align}
+
+That is, at each loop,
+\begin{align}
+\sum^{13}_{i=1}\Delta p_i = 0
+\end{align}
+In each loop, the pressure losses residual is composed of the pipe pressure losses in the same loop. In other words,
+\begin{align}
+	\Delta P = B \Delta p
+\end{align}
+Hence we have 
+\begin{align}
+	B\Delta p = 0
+\end{align}
+\[B\Delta p = 0\]
+Note, the connecting branch currents are independent of each other, as they belong to different meshes. The column
+of $B$-matrix indicate which connection branch current flow through the individual branches. That is,
+\begin{align*}
+\mathbf{B}&=B_{ij}
+	= \begin{cases}
+		1\quad \text{if flow in a pipe is the same direction as the definition}\\
+		-1\quad \text{if flow in a pipe is the opposite direction as the definition}\\
+		0\quad \text{if a pipe is not part of the loop}
+	\end{cases}
+\end{align*}
+ The total current of a branch results as 
+a linear superposition of these independent currents. More simply,
+\[\dV = B^T \dV_L\]
+where $\dV=\{\dV_1, \dV_2, \dV_3\}.$ The equation dramatically reduces the number of unknown entities required to just three!
+\end{frame}
+
+\begin{frame}{Loop pressure equations}
+	Each pipe is considered as a flow resistance whose pressure is proportional to the square of its flow rate. That is,
+	\begin{align}
+		\Delta p = K \dV^2
+	\end{align}
+where $K$ is the vector of resistance coefficient of each pipe given by the Darcy-Weisbech equation.
+
+For every pipe, one gets
+\begin{align*}
+	\Delta p = f(\dV)
+\end{align*}
 \end{frame}
 \begin{frame}{Network Topology}
-The description of the heating network is based on graph theory. First we need to form the topological matrice which show the structure of the mesh in matrix form. (To be added)
+The description of the heating network is based on graph theory. First we need to form the topological matrice which show the structure of the mesh in matrix form. (See circuit.pdf)
 
-
+\end{frame}
+\begin{frame}{Graph Theory}
+	Recall, the graph theory consider a network to be a compose of
+	\begin{itemize}
+		\item Nodes (Vertice)
+		\item Edges (Branches are edges of a spanning tree)
+		\item Loops 
+		\item Meshes: a loop of a planar graph with no other branches inside
+		\item Tree: a graph that is connected but got no loops
+		\item Spanning Tree
+	\end{itemize}
 \end{frame}
 
 \begin{frame}{Solution of network equation system}
