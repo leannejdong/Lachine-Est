@@ -320,7 +320,7 @@ First, we must define $F(\dV_L)$ and the Jacobien $DF$.
 		\begin{itemize}
 		\item Scalar case
 			\begin{enumerate}
-				\item Input: $v_0$, tolerance, eps
+				\item Input: $v_0$, eps
 				\item Repeat
 				\[v_0 = v - f(v)/f'(v)\]
 				until $v_n-v\le$eps
@@ -332,7 +332,7 @@ First, we must define $F(\dV_L)$ and the Jacobien $DF$.
  		\begin{itemize}
 		\item Vector case
 			\begin{enumerate}
-				\item Input: $V_0$, \textbf{tolerance}, \textbf{eps}
+				\item Input: $V_0$, \textbf{eps}
 				\item Repeat
 				\[V_0 = V - DF(V)^{-1} F(V)\]
 				until $V_n-V\le$eps
@@ -345,6 +345,7 @@ First, we must define $F(\dV_L)$ and the Jacobien $DF$.
 \begin{align*}
  	V^{k+1}:= V^k - \underbrace{DF(V^k)^{-1}F(V^k)}_{\text{newton correction}},\qquad DF(V^k)\,\,\text{sufficiently regular}
  \end{align*} 
+ Example: \url{https://godbolt.org/z/9adtJE}
 
 \end{frame}
 
