@@ -285,34 +285,6 @@ First, we must define $F(\dV_L)$ and the Jacobien $DF$.
 
 \subsubsection{Solution of nonlinear systems}
 
-\begin{frame}[shrink=20]{Nonlinear system and root finding}
-
-\begin{itemize}
-	%\item  $f$ is nonlinear when it fails the superposition principle: $f(x_1+x_2+\cdots)\neq f(x_1)+f(x_2)+\cdots$.
-	\item A system of nonlinear equation is a set of equations 
-	\begin{align*}
-		f_1(x_1,x_2,\cdot,x_n)&=0,\\
-		f_2(x_1,x_2,\cdot,x_n)&=0,\\
-		&\shortvdotswithin{=}
-		f_n(x_1,x_2,\cdot,x_n)&=0.
-	\end{align*}
-%where $(x_1,x_2,\cdots, x_n)\in\mathbb{R}^n$ and each $f_i$ is a nonlinear real function, $i=1,2,\cdots,n$
-	\item There are three type of nonlinear system in hydraulic model. The solutions are usually found via 
-	\textbf{Newton-Raphson} or Hardy Cross Method.
-
-	\item An example of nonlinear system from the DHN in Scharnhauser Park (Hassine and Eicker 2011)
-
-	\begin{align*}
-		x^2-2x-y+0.5=0\\
-		x^2+4*y^2-y-4=0
-	\end{align*}
-
-	\item To find the solution (root), we would use the C++ Linear algebra library {\color{purple}Eigen}.  %Note, Eigen might not work for more complicated nonlinearity...
-	Codes: \url{https://godbolt.org/z/9NPKAA}
-
-\end{itemize}
-\end{frame}
-
 \begin{frame}{Newtons algorithm}
 \textbf{Goal}: Starting from initial guess $x_1$, the Newton Raphson algorithm find the next value of $x$, i.e. $x_{n+1}$ from
 previous value $x_n$.
@@ -359,14 +331,14 @@ using namespace std;
 double square_root(double a)
 {
     double v = 1.0; // makes an initial guess
-    double eps;
+    const double eps;
 
     // Iterates using Newton-Raphson recurrence
     while (std::abs(v*v - a)>= eps)
     {
        v = 0.5*(v+a/v);
+       std::cout << v << std::endl;
     }
-    //std::cout << v << std::endl;
     return v;
 }
 
@@ -376,7 +348,36 @@ int main()
     std::cout << v << std::endl;
 }
 \end{minted}
-Try it for your self!  \url{https://godbolt.org/z/9adtJE}
+Try it for your self!  \url{https://godbolt.org/z/b8o2qQ}\\
+\href{https://github.com/leannejdong/Lachine-Est/blob/master/r/newton.pdf}{\beamergotobutton{Visualisation here}using animation package in R}
+\end{frame}
+
+\begin{frame}[shrink=20]{Nonlinear system and root finding}
+
+\begin{itemize}
+	%\item  $f$ is nonlinear when it fails the superposition principle: $f(x_1+x_2+\cdots)\neq f(x_1)+f(x_2)+\cdots$.
+	\item A system of nonlinear equation is a set of equations 
+	\begin{align*}
+		f_1(x_1,x_2,\cdot,x_n)&=0,\\
+		f_2(x_1,x_2,\cdot,x_n)&=0,\\
+		&\shortvdotswithin{=}
+		f_n(x_1,x_2,\cdot,x_n)&=0.
+	\end{align*}
+%where $(x_1,x_2,\cdots, x_n)\in\mathbb{R}^n$ and each $f_i$ is a nonlinear real function, $i=1,2,\cdots,n$
+	\item There are three type of nonlinear system in hydraulic model. The solutions are usually found via 
+	\textbf{Newton-Raphson} or Hardy Cross Method.
+
+	\item An example of nonlinear system from the DHN in Scharnhauser Park (Hassine and Eicker 2011)
+
+	\begin{align*}
+		x^2-2x-y+0.5=0\\
+		x^2+4*y^2-y-4=0
+	\end{align*}
+
+	\item To find the solution (root), we would use the C++ Linear algebra library {\color{purple}Eigen}.  %Note, Eigen might not work for more complicated nonlinearity...
+	Codes: \url{https://godbolt.org/z/9NPKAA}
+
+\end{itemize}
 \end{frame}
 
 \subsection{Simulation}

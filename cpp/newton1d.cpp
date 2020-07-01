@@ -16,8 +16,8 @@ double square_root(double a)
     while (std::abs(v*v - a)>= eps)
     {
        v = 0.5*(v+a/v);
+       std::cout << v << std::endl;
     }
-    //std::cout << v << std::endl;
     return v;
 }
 
