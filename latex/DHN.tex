@@ -314,7 +314,9 @@ First, we must define $F(\dV_L)$ and the Jacobien $DF$.
 \end{frame}
 
 \begin{frame}{Newtons algorithm}
-
+\textbf{Goal}: Starting from initial guess $x_1$, the Newton Raphson algorithm find the next value of $x$, i.e. $x_{n+1}$ from
+previous value $x_n$.
+\[x_{n+1}=x_n - \frac{f(x_n)}{f'(x_n)}\]
 \begin{columns}
 	\begin{column}{.55\textwidth}
 		\begin{itemize}
@@ -345,8 +347,36 @@ First, we must define $F(\dV_L)$ and the Jacobien $DF$.
 \begin{align*}
  	V^{k+1}:= V^k - \underbrace{DF(V^k)^{-1}F(V^k)}_{\text{newton correction}},\qquad DF(V^k)\,\,\text{sufficiently regular}
  \end{align*} 
- Example: \url{https://godbolt.org/z/9adtJE}
 
+\end{frame}
+
+\begin{frame}[fragile, shrink=10]{Newton algorithm: C++ implementation (scalar)}
+\begin{minted}{c++}
+#include <cmath>
+#include <iostream>
+using namespace std;
+
+double square_root(double a)
+{
+    double v = 1.0; // makes an initial guess
+    double eps;
+
+    // Iterates using Newton-Raphson recurrence
+    while (std::abs(v*v - a)>= eps)
+    {
+       v = 0.5*(v+a/v);
+    }
+    //std::cout << v << std::endl;
+    return v;
+}
+
+int main()
+{
+    auto v = square_root(1024);
+    std::cout << v << std::endl;
+}
+\end{minted}
+Try it for your self!  \url{https://godbolt.org/z/9adtJE}
 \end{frame}
 
 \subsection{Simulation}

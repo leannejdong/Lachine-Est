@@ -1,0 +1,36 @@
+---
+title: "Newton's Method"
+author: "Leanne Dong"
+date: "01/07/2020"
+output: pdf_document
+---
+
+
+```{r}
+library(animation)
+f = newton.method()
+f$root
+```
+
+```{r}
+f1=newton.method(function(v) v^2-1024,init=1)
+f1$root
+```
+
+```{r}
+## take a long long journey
+f2=newton.method(function(x) 5 * x^3 - 7 * x^2 - 40 * x + 100, 7.15, c(-6.2,7.1))
+f2$root
+```
+
+```{r}
+## another function
+ani.options(interval = 0.5)
+xx = newton.method(function(x) exp(-x) * x, rg = c(0, 10), init = 2)
+```
+
+```{r}
+## does not converge!
+xx = newton.method(function(x) atan(x), rg = c(-5, 5), init = 1.5)
+xx$root # Inf
+```
