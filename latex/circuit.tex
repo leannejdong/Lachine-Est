@@ -3,7 +3,7 @@
 \usepackage[utf8x]{inputenc}
 %\usepackage{color}
 %\usepackage[fleqn,tbtags]{mathtools}
-\usepackage{xcolor,minted,hyperref,fontawesome,graphicx,mathtools}
+\usepackage{xcolor,minted,hyperref,graphicx,mathtools}
 
 \definecolor{UBCblue}{rgb}{0.04706, 0.13725, 0.26667} % UBC Blue (primary)
 
@@ -152,6 +152,14 @@
     	\end{figure}
 \end{frame}
 
+\begin{frame}{Graph visualisation}
+\begin{itemize}
+	\item We will use Qt, a framework for making GUI for applications in C++ language;
+%	\item 
+\end{itemize}
+	
+\end{frame}
+
 \section{Setting up Kirchhoff's equation}
 
 \begin{frame}{A very simple example}
@@ -242,20 +250,30 @@ where $V$ is the vector of branch voltages and $B$ is known as the {\color{purpl
 	By the superposition principle, the topological matrices $A$ and $B$ both contain the same full information on the assembly of branches.
 \end{frame}
 
-\begin{frame}{Two ways of modelling circuit networks}
+\begin{frame}{Analysis circuit networks}
 \begin{itemize}
-	\item The flow of electrons
-	\item The flow of positrons
+	\item {\color{red}Mesh Current Analysis}: See  \href{https://www.electronics-tutorials.ws/dccircuits/dcp_5.html}{tutorial}
+	\item Nodal Voltage Analysis
 \end{itemize}
-We use the positrons approach. That is
-\begin{align*}
-V_a	\xrightarrow[R]{\qquad I \qquad} V_b \qquad I>0\,\,\text{implies}\,\,V_a>V_b
-\end{align*}
-then $IR=V_a-V_b.$
+We choose Mesh current method over Nodal approach as we can exploit the independence of the loops.
+In this way, we obtain minimum set of equations needed to solve the circuit, without redundancies.
 \end{frame}
+
+\begin{frame}
+\textbf{Assumption of Mesh current method (verso.c)}:
+\begin{itemize}
+	\item Circuit is built up of several meshes with branches which contain resistance;
+	\item By the superposition principle, one can split the analysis of the full circuit as the analysis of independent meshes;
+	\item Set specific direction of the current in each mesh and so the original circuit is splitted into many meshes with given current direction (directed meshes).
+	\item Superpose the folution to find the global solution of the circuit equations.
+\end{itemize}
+
+\end{frame}
+
+
 \begin{frame}{The formal procedure}
 \begin{enumerate}
-	\item Describe the circuit in a computer-readable format;
+	\item Describe the circuit in a computer-readable format (how data was stored and read);
 	\item Extract a set of independent loops;
 	\item For each loop, we associate a loop current;
 	\item Use KVL to set up a system of $n$ equations, one for each independent loop;
@@ -301,9 +319,8 @@ So basically the inflow outflow relations,
 \end{frame}
 %To solve one can simply use Gaussian elimination in any language of your favor.
 
-\section{Setting up the Kirchhoff equations: an graph theoretic approach }
-
-\subsection{Find spanning trees and fundamental set of circles (circuit base)}
+%\section{Setting up the Kirchhoff equations}
+\subsection{Find spanning trees and fundamental set of circles}
 
 \begin{frame}{Methods}
 	\begin{itemize}
@@ -386,7 +403,7 @@ So basically the inflow outflow relations,
 		\item By looping over all branches, one can construct a new matrix $I=\{i_{ik}\}$ where the element $i_{jk}$ stores the current in the branch that links the i-th node with the k-th node.
 		\item Similarly, we calculate a voltage matrix $V=\{v_{jk}\}$, where the matrix elemet $v_{jk} = r_{jk}$, $i_{jk}$ stores the voltage drop in the branch that links the $j$th node with the $k$th node.
 		\item Voltage are set by the power supplies w.r..t. a ground terminal: one can find the voltage of any node w.r.t. ground by following any path along the circuit that joins the node with the ground node and summing all the voltage drops.
-		\item Finnaly, save the results on a file and save for further analysis
+		\item Finaly, save the results on a file and save for further analysis
 	\end{itemize}
 \end{frame}
 
@@ -395,7 +412,7 @@ So basically the inflow outflow relations,
 		\item A comparison of graph-based method with the nodal method used in established programs such as SPICE
 		\item Optimising circuit representation in the description file
 		\item Deal with sparse matrix case, the program efficiency could be boosted with the use of sparse matrix code
-		\item code could be cleaned up with C++, with introduction of linked lists represent loops and other graph structures
+		\item code could be cleaned up with C++, performance could be boosted via better data structures, such as linked lists (represent loops) and other graph structures
 		\item Can be extended to handle time-dependent voltage and currents, instead of the linear system we have seen, we can manipulate the corresponding DEs and use a DE solver
 		\item Could be extended to include non-linear elements like semiconductor diodes, transistors, etc, this would require the intro of a nonlinear equation solver
 	\end{itemize}
@@ -407,18 +424,19 @@ So basically the inflow outflow relations,
 		\item Could work on a graphical interface both for input - by placing components in a special window - and for output - by automatically plotting output functions
 		\item Could be used in the analysis of fluid flow - using the analogy between hydraulic and circuit networks.
 	\end{itemize}
+\textbf{Rule of Sum for High performance code}: Efficiency with algorithms and performance through data structure.
 \end{frame}
 
-\begin{frame}{Future plan}
-\begin{itemize}
-	\item Study source code of insel engine;
-	\item Develop {\color{red}ideas} to extend the insel engine toward undirected graph;
-	\item Program and implement the ideas. With helps of modern C++ library Boost Graph Library. For instance, with use of 
-\href{https://www.boost.org/doc/libs/1_46_0/boost/graph/tiernan_all_cycles.hpp}{\beamergotobutton{tiernan\_all\_cycles.hpp}}
-and \href{https://www.boost.org/doc/libs/1_46_1/libs/graph/example/tiernan_print_cycles.cpp}{\beamergotobutton{tiernan\_print\_cycles.cpp}} we could find independent set of cycles, each cycle will then give us an equation. The set of cycles yield a system of equations.
-\end{itemize}
-
-\end{frame}
+% \begin{frame}{Future plan}
+% \begin{itemize}
+% 	\item Study source code of insel engine;
+% 	\item Develop {\color{red}ideas} to extend the insel engine toward undirected graph;
+% 	\item Program and implement the ideas. With helps of modern C++ library Boost Graph Library. For instance, with use of
+% \href{https://www.boost.org/doc/libs/1_46_0/boost/graph/tiernan_all_cycles.hpp}{\beamergotobutton{tiernan\_all\_cycles.hpp}}
+% and \href{https://www.boost.org/doc/libs/1_46_1/libs/graph/example/tiernan_print_cycles.cpp}{\beamergotobutton{tiernan\_print\_cycles.cpp}} we could find independent set of cycles, each cycle will then give us an equation. The set of cycles yield a system of equations.
+% \end{itemize}
+%
+% \end{frame}
 
 % \begin{frame}[fragile,shrink=30]{C++ Boost Graph Library }
 % %Here is \href{https://www.boost.org/doc/libs/1_46_0/boost/graph/tiernan_all_cycles.hpp}{tiernan_all_cycles.hpp} and 
@@ -522,7 +540,7 @@ and \href{https://www.boost.org/doc/libs/1_46_1/libs/graph/example/tiernan_print
 % %\end{lstlisting}
 % \end{frame}
 
-\section{Solving the Power System}
+%\section{Solving the Power or Hydraulic System}
 
 \begin{frame}{Proposal: object oriented algorithms in C++}
 \begin{itemize}
@@ -534,7 +552,7 @@ and \href{https://www.boost.org/doc/libs/1_46_1/libs/graph/example/tiernan_print
 \end{itemize}
 
 \end{frame}
-
+\subsection{Numerical methods}
 \begin{frame}{Numerical Algorithms}
 	\begin{itemize}
 		\item Power system is represented by thousands of differential or algebraic equations (DAEs).
@@ -567,11 +585,11 @@ and \href{https://www.boost.org/doc/libs/1_46_1/libs/graph/example/tiernan_print
 	Simplify (\ref{eq1}), write in matrix form, we have
 	\[
 \left(
-	\begin{array}{ccc|c}
-	  310 & -200 & -100 & 0\\
-	  -200 & 320 & 0 & -100\\
-	  -100 & 0 & 310 & -210\\
-	  0 & -100 & -210 & 330
+	\begin{array}{cccc|c}
+	  310 & -200 & -100 & 0 & 0\\
+	  -200 & 320 & 0 & -100 & 0\\
+	  -100 & 0 & 310 & -210 & 10\\
+	  0 & -100 & -210 & 330 & 0
 	\end{array}	
 \right)
 \]
@@ -580,6 +598,8 @@ and \href{https://www.boost.org/doc/libs/1_46_1/libs/graph/example/tiernan_print
 We invoke C++ to solve the problem for us.
 
 \url{https://godbolt.org/z/eTu_xC}
+
+\textbf{Exercise}: Solve the above using nodal analysis.
 
 \end{frame}
 
@@ -617,7 +637,8 @@ It is easy to draw in C++.
 \end{frame}
 
 
-\section{Exercises}
+\section{Exercises and Projects}
+\subsection{Exercise}
 \begin{frame}{Generic Example of a Network model (Linear case, Juergen, 2019)}
      	     \begin{figure}[!ht]
   			\centering
@@ -638,8 +659,13 @@ KVL: 	$\sum_{loop} V_k = 0$
 \end{frame}
 
 \begin{frame}{Solution}
+Assume the positrons approach. That is
+\begin{align*}
+V_a	\xrightarrow[R]{\qquad I \qquad} V_b \qquad I>0\,\,\text{implies}\,\,V_a>V_b
+\end{align*}
+then $IR=V_a-V_b.$
 	\textbf{Circuit A}:
-\[	V_1 = 5\times 3 - 3\times 10 +10 I =0 \]
+\[	V_1 = 3\times 5 + 3\times 10 -10 I =0 \]
 
 	\textbf{Circuit B}:
 \[	-5I - 10 I -10 I +3\times 10 =0 \]
@@ -778,6 +804,22 @@ void add_edge(std::vector<std::vector<int> >& inc, int u, int v)
    ed_no++; //increase the edge number
 }
 \end{minted}	
+\end{frame}
+
+\subsection{Student projects}
+
+\begin{frame}{Project 1}
+\begin{itemize}
+	\item Learn thoroughly Milloti's source codes, re-implement Milotti's approach in C++ with a more efficient graph algorithms. (Hint: Try DFS to find spanning tree)
+	\item Develop a simulator (Either Qt or OpenGL) to visualize the Electrical Distribution Network and displays results in a more intuitive manner for any specific configuration of the power flow problem. This visualizer also allows for easy interaction with the program.
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Project 2}
+	Implement a Diode example using Milotti's graph theoretic approach. (C or C++)
+
+\emph{Hint}: Extend the current C project to nonlinear  element and the construction of systems of differential equations to manipulate time-dependent signals, much like in the well-known program \href{https://en.wikipedia.org/wiki/SPICE}{SPICE}. 
 \end{frame}
 
 \end{document}
