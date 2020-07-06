@@ -329,9 +329,6 @@ traversal methods to access the information is crucial to solve the electrical o
 	
 \end{frame}
 
-\begin{frame}
-	
-\end{frame}
 
 \begin{frame}{Traverse information in a Graph: DFS vs BFS}
 	\begin{table}[h!]
@@ -353,10 +350,24 @@ traversal methods to access the information is crucial to solve the electrical o
 			\end{tabular}};
 		\end{center}
 	\end{table}
-Please check our \href{https://github.com/haophancs/simple-graph-tool}{simple-graph-tool} for demonstration of DFS and BFS traversal
+Check our \href{https://github.com/haophancs/simple-graph-tool}{\beamergotobutton{simple-graph-tool}} for demonstration of DFS and BFS traversal
 \end{frame}
-
-\begin{frame}{Methods}
+\begin{frame}[shrink=5]{ Methods of finding cycle bases/Loop detection: Constructing spanning tree}
+\begin{itemize}
+	\item The central idea of construct cycle bases is to generate a spanning tree from the undirected graph.
+	\item After the spanning tree is built, we look for all edges which are present in the graph but not in the tree.
+	\item Adding one of the missing edges to the tree will form a cycle (the so-called fundamental cycles).
+	\item A graph can have many different spanning trees depending on the chosen root node and the way the tree was built.
+	\item Hence, each spanning tree constructs its own fundamental cycle.
+	\item Every fundamental cycle form a cycle basis. The set of all fundamental cycles forms a cycle bases. See \href{http://www.math.cmu.edu/~mradclif/teaching/241F18/CycleBases.pdf}{\beamergotobutton{Tutorial}}
+	\item Every cycle basis is complete, it does not matter which spanning tree was used to generate the cycle basis,
+	each basis is equivalently appropriate to construct all possible cycles of the graph.
+	\item The typical algorithms for constructing spanning trees are DFS or BFS. 
+	\item DFS is preferred for efficiency: each node differs by only one edge from the main branch. Check tutorial \href{http://courses.ics.hawaii.edu/ReviewICS241/morea/trees/SpanningTrees-QA.pdf}{\beamergotobutton{here}}.
+\end{itemize}
+	
+\end{frame}
+\begin{frame}{Methods of finding cycle bases/Loop detection: Literature}
 	\begin{itemize}
 		\item  \href{https://dl.acm.org/doi/pdf/10.1145/363848.363861}{\beamergotobutton{Gotlieb and Corneil (1967)}}: Implementated by a Physicist Prof. Milotti's group, see \href{https://github.com/edymil/CircuitMath}{\beamergotobutton{CircuitMath}}.
 		\item The above was further improved by \href{http://www.cs.kent.edu/~dragan/GraphAn/CycleBasis/p514-paton.pdf}{\beamergotobutton{Paton (1969)}}. The DFS search was used to construct cycle base: Computational very efficient!
@@ -365,7 +376,7 @@ Please check our \href{https://github.com/haophancs/simple-graph-tool}{simple-gr
 	In term of storage and speed, Paton and Tiernan are better. Moreover, Tiernan's algorithm has been written into the modern C++ numerics libraries like \href{https://www.boost.org/}{\beamergotobutton{Boost}}
 \end{frame}
 
-\begin{frame}{Method: \href{https://dl.acm.org/doi/pdf/10.1145/363848.363861}{Gotlieb and Corneil (1967)}}
+\begin{frame}{Method of finding cycle bases/Loop detection: \href{https://dl.acm.org/doi/pdf/10.1145/363848.363861}{Gotlieb and Corneil (1967)}}
 	\textbf{Assumptions}
 	\begin{itemize}
 		\item Undirected graph is represented by its adjacency matrix $A=\{a_{ij}\}$ is
@@ -391,14 +402,26 @@ Please check our \href{https://github.com/haophancs/simple-graph-tool}{simple-gr
 
 		\begin{enumerate}
 			\item The set of $n$ node is partitioned w.r.t. some chsen edges to form a set of disjoijnt trees with adjacency matrix $B$.
-			\item For rach row $i$ of A, set $b_{ji}=b_{ij}=1$ if $a_{ij}$ is the first superdiagonal element of the $i$th row of $A$ to equal 1; otherwise set $b_{ji}=b_{ij}=0$.
+			\item For rach row $i$ of A, set $b_{ji}=b_{ij}=1$ if $a_{ij}$ is the first {\color{red}superdiagonal} element of the $i$th row of $A$ to equal 1; otherwise set $b_{ji}=b_{ij}=0$.
+			\begin{enumerate}
+				\item For $i=3$, the {\color{red}superdiagonal} elements are $j=4,5,6,7$.
+				\item The first {\color{red}superdiagonal} with $i=3$ is $j=4$, hence $B(3,4)=B(4,3)=1$. The first {\color{red}superdiagonal} with $i=4$ is $j=7$, hence $B(4,7)=B(7,4)=1$. 
+			\end{enumerate}	
+			\centering	
+			\includegraphics[height=0.15\textwidth]{matA.png}
+			\qquad \qquad
+			\includegraphics[height=0.15\textwidth]{matB.png}
 		\end{enumerate}
-
-	\item Divide the set of nodes of the graph into connected components w r.t. the edges chosen in step 1.
-	\item Amalgamate the componets by adding appropriate edges to yield a spanning tree.
-	\item Produce a set of fundamental cycles
 	\end{itemize}
 	%\href{https://dl.acm.org/doi/pdf/10.1145/363848.363861}{\beamergotobutton{Gotlieb and Corneil (1967)}}
+\end{frame}
+
+\begin{frame}{Method: Gotlieb and Corneil (1967)}
+\begin{itemize}
+	\item Divide the set of nodes of the graph into connected components w r.t. the edges chosen in Matrix B.
+	\item Join the componets by adding appropriate edges to yield a spanning tree.
+	\item Produce a set of fundamental cycles.
+\end{itemize}
 \end{frame}
 \begin{frame}{Method: \href{http://www.cs.kent.edu/~dragan/GraphAn/CycleBasis/p514-paton.pdf}{Paton (1969)}}
 	This has been implemented by a computer scientist \href{https://www.codeproject.com/Articles/1158232/Enumerating-All-Cycles-in-an-Undirected-Graph}{Philipp Sch}. He demonstrated how in principle one can enumerate all cycles of a graph. However the method does not scale up well.
@@ -430,7 +453,7 @@ Please check our \href{https://github.com/haophancs/simple-graph-tool}{simple-gr
 \section{Solving the Kirchoff's law equations}
 
 
-\begin{frame}{Branch currents and voltages}
+\begin{frame}[shrink=5]{Branch currents and voltages}
 	\begin{itemize}
 		\item The solution of linear equation yields all the independent loop currents;
 		\item From them, we can find the branch currents by summing over all the independent loop currents that traverse a given branch.
@@ -861,6 +884,25 @@ void add_edge(std::vector<std::vector<int> >& inc, int u, int v)
 \end{itemize}
 
 
+\end{frame}
+
+\begin{frame}{Resources for learning C++}
+First, why? Check \href{https://medium.com/@vardanator/why-cs-students-must-learn-c-as-their-main-programming-language-6d3b4f8720bd}{\beamergotobutton{Why CS student must learn C++ as their main language}}. C++ was invented by computer scientist Bjarne Stroustrup. It is a languaged that was created to fit for humans for all domains. 
+
+\textbf{Books}
+\begin{itemize}
+	\item \href{https://www.youtube.com/watch?v=fhM24zs1MFA}{Effective Modern C++ by Scott Myers}
+	\item \href{https://www.amazon.ca/Discovering-Modern-Intensive-Scientists-Programmers/dp/0134383583}{Discovering Modern C++: An intensive Course for Scientists, Engineers and Programmers}
+	\item \href{https://www.amazon.ca/17-Detail-Exciting-Features-Standard/dp/1798834065}{C++17 in detail}
+\end{itemize}
+
+\textbf{Video Lectures}: These are useful if you are unsure where to start and how to set things up.
+\begin{itemize}
+	\item \href{https://www.youtube.com/watch?v=1OsGXuNA5cc}{Cherno}
+	\item \href{https://www.youtube.com/watch?v=0NsRloi4xd4&list=PL1zrw-_IdRMvaZVcmniINKcdQpFW-k_kC}{Modern C++ for Computational Scientists}
+	\item \href{https://app.pluralsight.com/library/courses/cplusplus-fundamentals-c17/table-of-contents}{C++ Fundamentals Including C++17 by Kate Gregory}
+\end{itemize}
+	
 \end{frame}
 
 \end{document}
