@@ -3,7 +3,7 @@
 \usepackage[utf8x]{inputenc}
 %\usepackage{color}
 %\usepackage[fleqn,tbtags]{mathtools}
-\usepackage{xcolor,minted,hyperref,graphicx,mathtools}
+\usepackage{xcolor,minted,hyperref,graphicx,mathtools,tikz}
 
 \definecolor{UBCblue}{rgb}{0.04706, 0.13725, 0.26667} % UBC Blue (primary)
 
@@ -153,10 +153,10 @@
 \end{frame}
 
 \begin{frame}{Graph visualisation}
-\begin{itemize}
-	\item We will use Qt, a framework for making GUI for applications in C++ language;
-%	\item 
-\end{itemize}
+We are currently developing an undirected graph extension of 
+\href{https://github.com/leannejdong/simple-graph-tool}{\beamergotobutton{Simple-graph-tool}}, which 
+is a free tool visualizing graph theory and supporting weighted directed graph. Our \textbf{Main technology}
+are Qt (a framework for making GUI for applications in C++ language) and CMake (native build environment across platform)
 	
 \end{frame}
 
@@ -321,6 +321,40 @@ So basically the inflow outflow relations,
 
 %\section{Setting up the Kirchhoff equations}
 \subsection{Find spanning trees and fundamental set of circles}
+
+\begin{frame}{Why find spanning trees}
+
+The construction of structures as spanning trees and efficient
+traversal methods to access the information is crucial to solve the electrical or hydraulic network problem.
+	
+\end{frame}
+
+\begin{frame}
+	
+\end{frame}
+
+\begin{frame}{Traverse information in a Graph: DFS vs BFS}
+	\begin{table}[h!]
+		\begin{center}
+			\tikz\node[draw=red,thick,double,inner sep=1pt]{
+			\begin{tabular}{p{16mm}|p{22mm}|p{30mm}|p{30mm}}
+				\hline
+				Importance & Key & BFS & DFS\\
+				\hline
+				1 & Definition & Breadth First Search & Depth First Search\\
+				\hline
+				2 & Data \newline structure & Use \textbf{queue} to find  shortest path & Use \textbf{stack} to find shortest path \\
+				\hline
+				3 & Source & BFS is better when target is closer & DFS is better  when target is far\\
+				\hline
+				4 & Speed & Slower & Faster\\
+				\hline
+				5 & Time \newline complexity & $O(V+E)$ & $O(V+E)$
+			\end{tabular}};
+		\end{center}
+	\end{table}
+Please check our \href{https://github.com/haophancs/simple-graph-tool}{simple-graph-tool} for demonstration of DFS and BFS traversal
+\end{frame}
 
 \begin{frame}{Methods}
 	\begin{itemize}
@@ -564,7 +598,7 @@ So basically the inflow outflow relations,
 
 \begin{frame}{Review: Algorithms for loop extraction}
 	\begin{itemize}
-		\item DFS: Iveti\'c, Vasili\'c, Stani\'c and Prodanovi\'c (2016) identify the set of basis loops from which
+		\item DFS: \href{https://iwaponline.com/jh/article/18/1/33/29990/Speeding-up-the-water-distribution-network-design}{Iveti\'c, Vasili\'c, Stani\'c and Prodanovi\'c (2016)} identify the set of basis loops from which
 		minimum loops are obtained from transformations of spanning tree. Cycles extracted in their work may not 
 		be minimal ones.
 		\item Gotlieb and Corneil (1967)
@@ -661,9 +695,8 @@ KVL: 	$\sum_{loop} V_k = 0$
 \begin{frame}{Solution}
 Assume the positrons approach. That is
 \begin{align*}
-V_a	\xrightarrow[R]{\qquad I \qquad} V_b \qquad I>0\,\,\text{implies}\,\,V_a>V_b
+V_a	\xrightarrow[R]{\qquad I \qquad} V_b \qquad I>0\,\,\text{implies}\,\,V_a>V_b\,\Longrightarrow\, IR=V_a-V_b
 \end{align*}
-then $IR=V_a-V_b.$
 	\textbf{Circuit A}:
 \[	V_1 = 3\times 5 + 3\times 10 -10 I =0 \]
 
@@ -723,6 +756,11 @@ where
 \end{enumerate}
 We will now implement this in C++. Assume $n=2$, $T=300.$. Along with other constants, these together yields $\frac{q}{n\kappa T}$ The complete example can be easily implemented in C++ with  \href{http://eigen.tuxfamily.org/index.php?title=Main_Page}{\beamergotobutton{Eigen}}
 at \url{https://godbolt.org/z/p_LVgt}.
+
+\end{frame}
+
+\begin{frame}{Exercise}
+	Implement the Diode example using mesh current method by hand.
 \end{frame}
 
 \begin{frame}[fragile,shrink=5]{Creating adjacency matrix}
@@ -817,9 +855,12 @@ void add_edge(std::vector<std::vector<int> >& inc, int u, int v)
 \end{frame}
 
 \begin{frame}{Project 2}
-	Implement a Diode example using Milotti's graph theoretic approach. (C or C++)
+\begin{itemize}
+	\item 	Implement a Diode example using Milotti's graph theoretic approach. (C or C++)
+	\item   {\color{red}Hint}: Extend the current C project to nonlinear  element and the construction of systems of differential equations to manipulate time-dependent signals, much like in the well-known program \href{https://en.wikipedia.org/wiki/SPICE}{SPICE}. 
+\end{itemize}
 
-\emph{Hint}: Extend the current C project to nonlinear  element and the construction of systems of differential equations to manipulate time-dependent signals, much like in the well-known program \href{https://en.wikipedia.org/wiki/SPICE}{SPICE}. 
+
 \end{frame}
 
 \end{document}
