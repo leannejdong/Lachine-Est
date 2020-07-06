@@ -131,7 +131,7 @@
  		\begin{figure}[!ht]
   			\centering
     		\includegraphics[width=0.6\textwidth]{loop.png}
-   			 \caption[figure 3]{Braches and loops}
+   			 \caption[figure 3]{Branches and loops}
     		\label{fig:eg3}
     	\end{figure}
       	\end{column}
@@ -152,7 +152,7 @@
     	\end{figure}
 \end{frame}
 
-\begin{frame}{Graph visualisation}
+\begin{frame}{Graph visualization}
 We are currently developing an undirected graph extension of 
 \href{https://github.com/leannejdong/simple-graph-tool}{\beamergotobutton{Simple-graph-tool}}, which 
 is a free tool visualizing graph theory and supporting weighted directed graph. Our \textbf{Main technology}
@@ -264,8 +264,8 @@ In this way, we obtain minimum set of equations needed to solve the circuit, wit
 \begin{itemize}
 	\item Circuit is built up of several meshes with branches which contain resistance;
 	\item By the superposition principle, one can split the analysis of the full circuit as the analysis of independent meshes;
-	\item Set specific direction of the current in each mesh and so the original circuit is splitted into many meshes with given current direction (directed meshes).
-	\item Superpose the folution to find the global solution of the circuit equations.
+	\item Set specific direction of the current in each mesh and so the original circuit is spitted into many meshes with given current direction (directed meshes).
+	\item Superpose the solution to find the global solution of the circuit equations.
 \end{itemize}
 
 \end{frame}
@@ -352,20 +352,26 @@ traversal methods to access the information is crucial to solve the electrical o
 	\end{table}
 Check our \href{https://github.com/haophancs/simple-graph-tool}{\beamergotobutton{simple-graph-tool}} for demonstration of DFS and BFS traversal
 \end{frame}
-\begin{frame}[shrink=5]{ Methods of finding cycle bases/Loop detection: Constructing spanning tree}
+\begin{frame}{ Methods of finding cycle bases/Loop detection: Constructing spanning tree}
 \begin{itemize}
 	\item The central idea of construct cycle bases is to generate a spanning tree from the undirected graph.
 	\item After the spanning tree is built, we look for all edges which are present in the graph but not in the tree.
 	\item Adding one of the missing edges to the tree will form a cycle (the so-called fundamental cycles).
 	\item A graph can have many different spanning trees depending on the chosen root node and the way the tree was built.
 	\item Hence, each spanning tree constructs its own fundamental cycle.
-	\item Every fundamental cycle form a cycle basis. The set of all fundamental cycles forms a cycle bases. See \href{http://www.math.cmu.edu/~mradclif/teaching/241F18/CycleBases.pdf}{\beamergotobutton{Tutorial}}
+\end{itemize}	
+\end{frame}
+
+\begin{frame}
+\begin{itemize}
+	\item Every fundamental cycle form a cycle basis. The set of all fundamental cycles forms a cycle bases. See 
+	\href{http://www.math.cmu.edu/~mradclif/teaching/241F18/CycleBases.pdf}{\beamergotobutton{Tutorial}}
 	\item Every cycle basis is complete, it does not matter which spanning tree was used to generate the cycle basis,
 	each basis is equivalently appropriate to construct all possible cycles of the graph.
 	\item The typical algorithms for constructing spanning trees are DFS or BFS. 
-	\item DFS is preferred for efficiency: each node differs by only one edge from the main branch. Check tutorial \href{http://courses.ics.hawaii.edu/ReviewICS241/morea/trees/SpanningTrees-QA.pdf}{\beamergotobutton{here}}.
-\end{itemize}
-	
+	\item DFS is preferred for efficiency: each node differs by only one edge from the main branch. Check tutorial 
+	\href{http://courses.ics.hawaii.edu/ReviewICS241/morea/trees/SpanningTrees-QA.pdf}{\beamergotobutton{here}}.
+\end{itemize}	
 \end{frame}
 \begin{frame}{Methods of finding cycle bases/Loop detection: Literature}
 	\begin{itemize}
@@ -401,8 +407,8 @@ Check our \href{https://github.com/haophancs/simple-graph-tool}{\beamergotobutto
 		\item Construct a set of disjoint trees by choosing some edges. 
 
 		\begin{enumerate}
-			\item The set of $n$ node is partitioned w.r.t. some chsen edges to form a set of disjoijnt trees with adjacency matrix $B$.
-			\item For rach row $i$ of A, set $b_{ji}=b_{ij}=1$ if $a_{ij}$ is the first {\color{red}superdiagonal} element of the $i$th row of $A$ to equal 1; otherwise set $b_{ji}=b_{ij}=0$.
+			\item The set of $n$ node is partitioned w.r.t. some chosen edges to form a set of disjoijnt trees with adjacency matrix $B$.
+			\item For each row $i$ of A, set $b_{ji}=b_{ij}=1$ if $a_{ij}$ is the first {\color{red}superdiagonal} element of the $i$th row of $A$ to equal 1; otherwise set $b_{ji}=b_{ij}=0$.
 			\begin{enumerate}
 				\item For $i=3$, the {\color{red}superdiagonal} elements are $j=4,5,6,7$.
 				\item The first {\color{red}superdiagonal} with $i=3$ is $j=4$, hence $B(3,4)=B(4,3)=1$. The first {\color{red}superdiagonal} with $i=4$ is $j=7$, hence $B(4,7)=B(7,4)=1$. 
@@ -419,7 +425,7 @@ Check our \href{https://github.com/haophancs/simple-graph-tool}{\beamergotobutto
 \begin{frame}{Method: Gotlieb and Corneil (1967)}
 \begin{itemize}
 	\item Divide the set of nodes of the graph into connected components w r.t. the edges chosen in Matrix B.
-	\item Join the componets by adding appropriate edges to yield a spanning tree.
+	\item Join the components by adding appropriate edges to yield a spanning tree.
 	\item Produce a set of fundamental cycles.
 \end{itemize}
 \end{frame}
@@ -467,7 +473,7 @@ Check our \href{https://github.com/haophancs/simple-graph-tool}{\beamergotobutto
 \begin{frame}{ Potential improvements}
 	\begin{itemize}
 		\item A comparison of graph-based method with the nodal method used in established programs such as SPICE
-		\item Optimising circuit representation in the description file
+		\item Optimizing circuit representation in the description file
 		\item Deal with sparse matrix case, the program efficiency could be boosted with the use of sparse matrix code
 		\item code could be cleaned up with C++, performance could be boosted via better data structures, such as linked lists (represent loops) and other graph structures
 		\item Can be extended to handle time-dependent voltage and currents, instead of the linear system we have seen, we can manipulate the corresponding DEs and use a DE solver
@@ -477,7 +483,7 @@ Check our \href{https://github.com/haophancs/simple-graph-tool}{\beamergotobutto
 
 \begin{frame}{ Potential improvements}
 	\begin{itemize}
-		\item Can be implemented in Object-Oriented sense, utilise the efficient C++ library like Boost.
+		\item Can be implemented in Object-Oriented sense, utilize the efficient C++ library like Boost.
 		\item Could work on a graphical interface both for input - by placing components in a special window - and for output - by automatically plotting output functions
 		\item Could be used in the analysis of fluid flow - using the analogy between hydraulic and circuit networks.
 	\end{itemize}
@@ -605,10 +611,10 @@ Check our \href{https://github.com/haophancs/simple-graph-tool}{\beamergotobutto
 	\item C++ is the most ideal language for building either an academic or for a live simulation system given \textbf{Performance} is the key. 
 	\item  In case any security issue arise from accepting data over a network, we can consider switching to Rust. From C++ to Rust is not a long learning curve as they are relative.
 	\item Java, C\# are relatively memory safe. But low in performance compared to C++.
-	\item We would encounter some PDEs in the CFD component later on, C++ allows us to integrate GPU in obtainling massively-parallel PDE solutions. Specifically, for solving large, spare liner or nonlinear system.
+	\item We would encounter some PDEs in the CFD component later on, C++ allows us to integrate GPU in obtaining massively-parallel PDE solutions. Specifically, for solving large, spare liner or nonlinear system.
 \end{itemize}
-
 \end{frame}
+
 \subsection{Numerical methods}
 \begin{frame}{Numerical Algorithms}
 	\begin{itemize}
@@ -783,7 +789,8 @@ at \url{https://godbolt.org/z/p_LVgt}.
 \end{frame}
 
 \begin{frame}{Exercise}
-	Implement the Diode example using mesh current method by hand.
+	Implement the Juergen's Diode example using mesh current method by hand. Then solve in your favorite programming languages.
+	Solution can be found at \href{https://github.com/leannejdong/Lachine-Est/blob/master/latex/soln-diode.pdf}{\beamergotobutton{my git repository}}.
 \end{frame}
 
 \begin{frame}[fragile,shrink=5]{Creating adjacency matrix}
@@ -792,7 +799,9 @@ at \url{https://godbolt.org/z/p_LVgt}.
 #include <vector>
 #include <utility>
 void print_graph(const std::vector<std::vector<int> > &adj);
-void addEdge(std::vector<std::vector<int> >& adj, int u, int v);
+void addEdge(std::vector<std::vector<int> >& adj, int u, int v); 
+/*double vector is bad as it triggers non continuous alocation and 
+hinder cache access; Try to improve it! */
 
 int main()
 {
@@ -887,7 +896,7 @@ void add_edge(std::vector<std::vector<int> >& inc, int u, int v)
 \end{frame}
 
 \begin{frame}{Resources for learning C++}
-First, why? Check \href{https://medium.com/@vardanator/why-cs-students-must-learn-c-as-their-main-programming-language-6d3b4f8720bd}{\beamergotobutton{Why CS student must learn C++ as their main language}}. C++ was invented by computer scientist Bjarne Stroustrup. It is a languaged that was created to fit for humans for all domains. 
+First, why? Check \href{https://medium.com/@vardanator/why-cs-students-must-learn-c-as-their-main-programming-language-6d3b4f8720bd}{\beamergotobutton{Why CS student must learn C++ as their main language}}. C++ was invented by computer scientist Bjarne Stroustrup. It is a languages that was created to fit for humans for all domains. 
 
 \textbf{Books}
 \begin{itemize}
