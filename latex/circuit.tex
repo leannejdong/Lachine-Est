@@ -350,7 +350,11 @@ traversal methods to access the information is crucial to solve the electrical o
 			\end{tabular}};
 		\end{center}
 	\end{table}
-Check our \href{https://github.com/haophancs/simple-graph-tool}{\beamergotobutton{simple-graph-tool}} for demonstration of DFS and BFS traversal
+	\begin{itemize}
+		\item Check \href{https://godbolt.org/z/anBkeU}{\beamergotobutton{DFS graph traversal C++ implementation}}
+		\item Check our \href{https://github.com/haophancs/simple-graph-tool}{\beamergotobutton{simple-graph-tool}} for demonstration of DFS and BFS traversal
+	\end{itemize}
+
 \end{frame}
 \begin{frame}{ Methods of finding cycle bases/Loop detection: Constructing spanning tree}
 \begin{itemize}
@@ -487,7 +491,7 @@ Check our \href{https://github.com/haophancs/simple-graph-tool}{\beamergotobutto
 		\item Could work on a graphical interface both for input - by placing components in a special window - and for output - by automatically plotting output functions
 		\item Could be used in the analysis of fluid flow - using the analogy between hydraulic and circuit networks.
 	\end{itemize}
-\textbf{Rule of Sum for High performance code}: Efficiency with algorithms and performance through data structure.
+\textbf{Rule of thumb for High performance code}: Efficiency with algorithms; Performance through data structure.
 \end{frame}
 
 % \begin{frame}{Future plan}
@@ -841,17 +845,17 @@ void addEdge(std::vector<std::vector<int> >& adj, int u , int v)
 #include<vector>
 #include<utility>
 void displayMatrix(const std::vector<std::vector<int> >& inc);
-void add_edge(std::vector<std::vector<int> >& inc, int u, int v);
-int ed_no=0;
+void addEdge(std::vector<std::vector<int> >& inc, int u, int v);
+int edNo=0;
 
 int main() 
 {
 // Initialise array to hold incidence matrix, vec<>s is already dynamic
    std::vector <std::vector<int> > inc(3, std::vector<int>(4));
 //there are 3 vertices and 4 edges in the graph pila has
-   add_edge(inc, 0, 1);
-   add_edge(inc, 0, 2);
-   add_edge(inc, 1, 2);
+   addEdge(inc, 0, 1);
+   addEdge(inc, 0, 2);
+   addEdge(inc, 1, 2);
    
    displayMatrix(inc);
 }
@@ -867,11 +871,11 @@ void displayMatrix(const std::vector<std::vector<int> >& inc)
       std::cout << std::endl;
    }
 }
-void add_edge(std::vector<std::vector<int> >& inc, int u, int v) 
+void addEdge(std::vector<std::vector<int> >& inc, int u, int v) 
 {//function to add edge into the matrix with edge number
-   inc[u][ed_no]=1;
-   inc[v][ed_no]=1;
-   ed_no++; //increase the edge number
+   inc[u][edNo]=1;
+   inc[v][edNo]=1;
+   edNo++; //increase the edge number
 }
 \end{minted}	
 \end{frame}
